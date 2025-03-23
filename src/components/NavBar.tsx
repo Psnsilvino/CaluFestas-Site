@@ -44,7 +44,9 @@ const NavBar = () => {
 				{/* Logout button */}
 				
 				<button className="bg-blue-900 hover:bg-blue-700 text-white py-2 px-4 rounded-full" onClick={handleClick}>
-					Login
+
+					<Link to={"/cadastro"} className="hover:underline">Cadastro/Login</Link>
+					
 				</button>
 			</nav>
 		</>
