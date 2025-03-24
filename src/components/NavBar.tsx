@@ -1,29 +1,29 @@
 
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import logo from "../assets/CaLu.png"
-import axios from "axios";
+// import axios from "axios";
 
 
 const NavBar = () => {
 
-	const navigate = useNavigate();
+	// const navigate = useNavigate();
 
-	const handleClick = async (e: { preventDefault: () => void; }) => {
-		e.preventDefault();
-		try {
-			const response = await axios.post("http://localhost:3000/api/users/logout", {}, {withCredentials: true})
-			console.log(response)
-			navigate("/login")
-		} catch (error) {
-			console.error(error)
-		}
-	}
+	// const handleClick = async (e: { preventDefault: () => void; }) => {
+	// 	e.preventDefault();
+	// 	try {
+	// 		const response = await axios.post("http://localhost:3000/api/users/logout", {}, {withCredentials: true})
+	// 		console.log(response)
+	// 		navigate("/login")
+	// 	} catch (error) {
+	// 		console.error(error)
+	// 	}
+	// }
 
 	return (
 		<>
 			<nav className="bg-white text-back px-6 py-4 flex justify-between items-center">
 				{/* Logo */}
-				<Link to={"https://youtu.be/dQw4w9WgXcQ?si=EpMcAbrT1I0bxECv"} className="text-3xl font-bold">
+				<Link to={"/"} className="text-3xl font-bold">
 					<img src={logo} alt="logo" className="w-24" />
 				</Link>
 				{/* Links */}
@@ -43,11 +43,11 @@ const NavBar = () => {
 				</ul>
 				{/* Logout button */}
 				
-				<button className="bg-blue-900 hover:bg-blue-700 text-white py-2 px-4 rounded-full" onClick={handleClick}>
-
-					<Link to={"/cadastro"} className="hover:underline">Cadastro/Login</Link>
-					
-				</button>
+				<Link to={"/cadastro"}>
+					<button className="bg-blue-900 hover:bg-blue-700 text-white py-2 px-4 rounded-full hover:underline">
+						Cadastro/Login
+					</button>
+				</Link>
 			</nav>
 		</>
 	);
