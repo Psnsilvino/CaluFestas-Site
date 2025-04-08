@@ -17,7 +17,7 @@ const Login: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8080/api/clients', formData);
+      const response = await axios.post('http://localhost:8080/api/clients/login', formData);
       console.log('Login bem-sucedido:', response.data);
       alert('Login realizado com sucesso!');
     } catch (error) {

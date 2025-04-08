@@ -17,7 +17,7 @@ const Register: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8080/api/clients', formData);
+      const response = await axios.post('http://localhost:8080/api/clients/', formData);
       console.log('Registro bem-sucedido:', response.data);
       alert('Registro realizado com sucesso!');
     } catch (error) {
