@@ -40,6 +40,9 @@ const NavBar = () => {
 					<li>
 						<Link to={"/"} className="hover:underline">Contato</Link>
 					</li>
+					<li>
+						<Link to={"/"} className="hover:underline">Cadastrar Produto</Link>
+					</li>
 				</ul>
 				{/* Logout button */}
 				

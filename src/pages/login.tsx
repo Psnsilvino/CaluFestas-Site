@@ -62,6 +62,13 @@ const Login: React.FC = () => {
                 />
               </div>
 
+              {/* Link para recuperação de senha */}
+              <p className="mt-4 text-center text-gray-600">
+                <Link to="/esqueceusenha" className="text-blue-600 hover:underline">
+                  Esqueceu a senha?
+                </Link>
+              </p>
+
               <button
                 type="submit"
                 className="w-full bg-yellow-500 text-white py-3 rounded-lg font-semibold hover:bg-blue-900 transition"
@@ -70,14 +77,13 @@ const Login: React.FC = () => {
               </button>
             </form>
 
-            {/* Link para a tela de login */}
+            {/* Link para a tela de registro */}
             <p className="mt-4 text-center text-gray-600">
               Ainda não possui uma conta?{' '}
               <Link to="/cadastro" className="text-blue-600 hover:underline">
                 Registre-se aqui!
               </Link>
             </p>
-            
           </div>
         </div>
       </div>

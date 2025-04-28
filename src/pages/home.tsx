@@ -58,30 +58,36 @@ const Home: React.FC = () => {
         </div>
 
         {/* Grid de Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-4 gap-8 w-full px-6 max-w-5xl mb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-5 gap-8 w-full px-6 max-w-5xl mb-10">
           <Link to={"/catalogo"}>
             <div className="text-white p-4 rounded-lg shadow-md flex flex-col items-center gap-4 hover:bg-yellow-500 transition-all" style={{ backgroundColor: "#c1aa85" }}>
               <div className="text-4xl">📄</div>
-              <h2 className="text-xl font-bold">Catálogo</h2>
+              <h2 className="text-sm font-bold">Catálogo</h2>
             </div>
           </Link>
           <Link to={"/locacao"}>
             <div className="text-white p-4 rounded-lg shadow-md flex flex-col items-center gap-4 hover:bg-yellow-500 transition-all" style={{ backgroundColor: "#c1aa85" }}>
               <div className="text-4xl">👥</div>
-              <h2 className="text-xl font-bold">Locação</h2>
+              <h2 className="text-sm font-bold">Locação</h2>
             </div>
           </Link>
           <Link to={"/faq"}>
             <div className="text-white p-4 rounded-lg shadow-md flex flex-col items-center gap-4 hover:bg-yellow-500 transition-all" style={{ backgroundColor: "#c1aa85" }}>
               <div className="text-4xl">❓</div>
-              <h2 className="text-xl font-bold">FAQ</h2>
+              <h2 className="text-sm font-bold">FAQ</h2>
             </div>
           </Link>
           <Link to={"/contato"}>
             <div className="text-white p-4 rounded-lg shadow-md flex flex-col items-center gap-4 hover:bg-yellow-500 transition-all" style={{ backgroundColor: "#c1aa85" }}>
               <div className="text-4xl">🚛</div>
-              <h2 className="text-xl font-bold">Contato</h2>
+              <h2 className="text-sm font-bold">Contato</h2>
             </div>
+          </Link>
+          <Link to={"/cadastrarproduto"}>
+            <div className="text-white p-4 rounded-lg shadow-md flex flex-col items-center gap-4 hover:bg-yellow-500 transition-all" style={{ backgroundColor: "#c1aa85" }}>
+              <div className="text-4xl">📝</div>
+              <h2 className="text-sm font-bold">Cadastrar Produto</h2>
+             </div>
           </Link>
         </div>
 
