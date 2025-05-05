@@ -12,7 +12,7 @@ const Catalago: React.FC<{ setCart: any }> = ({ setCart }) => {
   const [currentPage, setCurrentPage] = React.useState(1);
   const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
   const [selectedSubcategory, setSelectedSubcategory] = React.useState<string | null>(null);
-  const productsPerPage = 7;
+  const productsPerPage = 8;
 
   React.useEffect(() => {
     const fetchProducts = async () => {

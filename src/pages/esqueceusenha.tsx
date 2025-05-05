@@ -1,14 +1,28 @@
 import { Link } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const EsqueceuSenha: React.FC = () => {
   const [email, setEmail] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Lógica para enviar o email de recuperação
-    alert(`Instruções de recuperação enviadas para: ${email}`);
+  
+    try {
+      const response = await axios.post('http://localhost:8080/api/clients/ForgotPassword', {
+        email: email,
+      });
+  
+      if (response.status === 201) {
+        alert('Instruções de recuperação enviadas com sucesso!');
+      } else {
+        alert('Não foi possível enviar as instruções. Tente novamente.');
+      }
+    } catch (error) {
+      alert('Erro ao enviar email de recuperação. Verifique o console.');
+      console.error(error);
+    }
   };
 
   return (
