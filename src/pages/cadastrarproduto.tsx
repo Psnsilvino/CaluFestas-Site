@@ -2,21 +2,14 @@ import { useState } from "react";
 import Head from "next/head";
 import Navbar from "../components/NavBar"; // Certifique-se de que o caminho está correto
 import axios from "axios";
-
-interface Product {
-  nome: string;
-  categoria: string;
-  quantidade: number;
-  quantidadeEmLocacao: number;
-  preco: string | number;
-  descricao: string;
-  imagem: string;
-}
+import { Product } from "../interfaces/product";
 
 export default function CadastrarProduto() {
   const [product, setProduct] = useState<Product>({
+    _id: "",
     nome: "",
     categoria: "",
+    subcategoria: "",
     quantidade: 0,
     quantidadeEmLocacao: 0,
     preco: "",
@@ -71,8 +64,10 @@ export default function CadastrarProduto() {
   
       // Resetar o formulário
       setProduct({
+        _id: "",
         nome: "",
         categoria: "",
+        subcategoria: "",
         quantidade: 0,
         quantidadeEmLocacao: 0,
         preco: "",

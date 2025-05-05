@@ -2,9 +2,10 @@ import React from "react";
 import axios from "axios";
 import Navbar from "../components/NavBar";
 import Footer from "../components/Footer";
+import { Product } from "../interfaces/product";
 
 const Catalago: React.FC<{ setCart: any }> = ({ setCart }) => {
-  const [products, setProducts] = React.useState<any[]>([]);
+  const [products, setProducts] = React.useState<Product[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -16,7 +17,7 @@ const Catalago: React.FC<{ setCart: any }> = ({ setCart }) => {
   React.useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/api/produtos"); // sua API Gin
+        const response = await axios.get("http://localhost:8080/api/products"); // sua API Gin
         setProducts(response.data);
       } catch (err) {
         console.error(err);
@@ -29,27 +30,28 @@ const Catalago: React.FC<{ setCart: any }> = ({ setCart }) => {
     fetchProducts();
   }, []);
 
-  const addToCart = (productId: number, quantity: number) => {
+  const addToCart = (productId: string, quantity: number) => {
+    console.log(products)
     if (quantity <= 0) return;
 
     setCart((prevCart: any) => {
-      const existingProduct = prevCart.find((item: any) => item.id === productId);
+      const existingProduct = prevCart.find((item: Product) => item._id === productId);
       if (existingProduct) {
-        return prevCart.map((item: any) =>
-          item.id === productId
-            ? { ...item, quantity: item.quantity + quantity }
+        return prevCart.map((item: Product) =>
+          item._id === productId
+            ? { ...item, quantity: item.quantidade + quantity }
             : item
         );
       } else {
-        const product = products.find((p) => p.id === productId);
-        return [...prevCart, { id: productId, name: product?.name || "", quantity }];
+        const product = products.find((p) => p._id === productId);
+        return [...prevCart, { _id: productId, name: product?.nome|| "", quantity }];
       }
     });
   };
 
   const filteredProducts = products.filter((product) => {
-    if (selectedCategory && product.category !== selectedCategory) return false;
-    if (selectedSubcategory && product.subcategory !== selectedSubcategory) return false;
+    if (selectedCategory && product.categoria !== selectedCategory) return false;
+    if (selectedSubcategory && product.subcategoria !== selectedSubcategory) return false;
     return true;
   });
 
@@ -57,12 +59,12 @@ const Catalago: React.FC<{ setCart: any }> = ({ setCart }) => {
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
 
-  const categories = Array.from(new Set(products.map((product) => product.category)));
+  const categories = Array.from(new Set(products.map((product) => product.categoria)));
   const subcategories = Array.from(
     new Set(
       products
-        .filter((product) => product.category === selectedCategory)
-        .map((product) => product.subcategory)
+        .filter((product) => product.categoria === selectedCategory)
+        .map((product) => product.subcategoria)
     )
   ).filter(Boolean);
 
@@ -126,7 +128,7 @@ const Catalago: React.FC<{ setCart: any }> = ({ setCart }) => {
           >
             {currentProducts.map((product) => (
               <div
-                key={product.id}
+                key={product._id}
                 style={{
                   textAlign: "center",
                   border: "1px solid #ddd",
@@ -137,8 +139,8 @@ const Catalago: React.FC<{ setCart: any }> = ({ setCart }) => {
                 }}
               >
                 <img
-                  src={product.image}
-                  alt={product.name}
+                  src={product.imagem}
+                  alt={product.nome}
                   style={{
                     width: "100%",
                     height: "300px",
@@ -147,16 +149,16 @@ const Catalago: React.FC<{ setCart: any }> = ({ setCart }) => {
                     backgroundColor: "#f0f0f0",
                   }}
                 />
-                <h3 style={{ fontSize: "18px", margin: "10px 0" }}>{product.name}</h3>
-                <p style={{ fontSize: "16px", color: "#333" }}>{product.price}</p>
-                <p style={{ fontSize: "14px", color: "#666" }}>{product.descrion}</p>
+                <h3 style={{ fontSize: "18px", margin: "10px 0" }}>{product.nome}</h3>
+                <p style={{ fontSize: "16px", color: "#333" }}>R${product.preco}</p>
+                <p style={{ fontSize: "14px", color: "#666" }}>{product.descricao}</p>
                 <div style={{ marginTop: "10px" }}>
                   <input
                     type="number"
                     min="1"
-                    max={product.stock}
+                    max={product.quantidade}
                     defaultValue="1"
-                    id={`quantity-${product.id}`}
+                    id={`quantity-${product._id}`}
                     style={{
                       width: "60px",
                       padding: "5px",
@@ -176,10 +178,10 @@ const Catalago: React.FC<{ setCart: any }> = ({ setCart }) => {
                     }}
                     onClick={() => {
                       const quantityInput = document.getElementById(
-                        `quantity-${product.id}`
+                        `quantity-${product._id}`
                       ) as HTMLInputElement;
                       const quantity = parseInt(quantityInput.value, 10);
-                      addToCart(product.id, quantity);
+                      addToCart(product._id, quantity);
                     }}
                   >
                     Adicionar ao Carrinho
