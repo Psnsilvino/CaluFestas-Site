@@ -1,44 +1,95 @@
 import { useState } from "react";
 import Head from "next/head";
 import Navbar from "../components/NavBar"; // Certifique-se de que o caminho está correto
+import axios from "axios";
 
 interface Product {
-  name: string;
-  photo: File | null;
-  description: string;
-  quantity: number;
+  nome: string;
+  categoria: string;
+  quantidade: number;
+  quantidadeEmLocacao: number;
+  preco: string | number;
+  descricao: string;
+  imagem: string;
 }
 
 export default function CadastrarProduto() {
   const [product, setProduct] = useState<Product>({
-    name: "",
-    photo: null,
-    description: "",
-    quantity: 0,
+    nome: "",
+    categoria: "",
+    quantidade: 0,
+    quantidadeEmLocacao: 0,
+    preco: "",
+    descricao: "",
+    imagem: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+
+    let newValue: string | number;
+
+    if (name === "quantidade") {
+      newValue = Number(value);
+    }
+    else {
+      newValue = value;
+    }
+
     setProduct((prev) => ({
       ...prev,
-      [name]: name === "quantity" ? Number(value) : value,
+      [name]: newValue,
     }));
   };
 
-  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setProduct((prev) => ({
-        ...prev,
-        photo: e.target.files![0],
-      }));
+  // const handleimagemChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (e.target.files && e.target.files[0]) {
+  //     setProduct((prev) => ({
+  //       ...prev,
+  //       photo: e.target.files![0],
+  //     }));
+  //   }
+  // };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+  
+    const produtoFinal = {
+      ...product,
+      preco: parseFloat((product.preco as string).replace(",", ".")),
+    };
+  
+    try {
+      const response = await axios.post("http://localhost:8080/api/products/register", produtoFinal, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+  
+      console.log("Produto cadastrado com sucesso:", response.data);
+      alert("Produto cadastrado com sucesso!");
+  
+      // Resetar o formulário
+      setProduct({
+        nome: "",
+        categoria: "",
+        quantidade: 0,
+        quantidadeEmLocacao: 0,
+        preco: "",
+        descricao: "",
+        imagem: "",
+      });
+    } catch (error) {
+      if (error) {
+        console.error("Erro no servidor:", error);
+        alert("Erro ao cadastrar produto: " + error);
+      } else {
+        console.error("Erro de conexão:", error);
+        alert("Erro de conexão com o servidor.");
+      }
     }
   };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Produto cadastrado:", product);
-    // Aqui você pode enviar o produto para o backend (API)
-  };
+  
 
   return (
     <>
@@ -54,8 +105,20 @@ export default function CadastrarProduto() {
               <label className="block text-gray-700 font-semibold mb-2">Nome do Produto</label>
               <input
                 type="text"
-                name="name"
-                value={product.name}
+                name="nome"
+                value={product.nome}
+                onChange={handleChange}
+                className="w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-gray-700 font-semibold mb-2">Categoria do Produto</label>
+              <input
+                type="text"
+                name="categoria"
+                value={product.categoria}
                 onChange={handleChange}
                 className="w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
                 required
@@ -65,25 +128,20 @@ export default function CadastrarProduto() {
             <div>
               <label className="block text-gray-700 font-semibold mb-2">Foto do Produto</label>
               <input
-                type="file"
-                accept="image/*"
-                onChange={handlePhotoChange}
+                type="text"
+                name="imagem"
+                value={product.imagem}
+                onChange={handleChange}
                 className="w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                required
               />
-              {product.photo && (
-                <img
-                  src={URL.createObjectURL(product.photo)}
-                  alt="Prévia da imagem"
-                  className="mt-2 h-32 object-cover rounded-md"
-                />
-              )}
             </div>
 
             <div>
               <label className="block text-gray-700 font-semibold mb-2">Descrição do Produto</label>
               <textarea
-                name="description"
-                value={product.description}
+                name="descricao"
+                value={product.descricao}
                 onChange={handleChange}
                 className="w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
                 rows={4}
@@ -95,11 +153,23 @@ export default function CadastrarProduto() {
               <label className="block text-gray-700 font-semibold mb-2">Quantidade</label>
               <input
                 type="number"
-                name="quantity"
-                value={product.quantity}
+                name="quantidade"
+                value={product.quantidade}
                 onChange={handleChange}
                 className="w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
                 min="0"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-gray-700 font-semibold mb-2">Preço</label>
+              <input
+                type="text"
+                name="preco"
+                value={product.preco}
+                onChange={handleChange}
+                className="w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
                 required
               />
             </div>
