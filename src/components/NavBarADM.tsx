@@ -57,7 +57,9 @@ const NavBar = () => {
                     <li>
                         <Link to={"/"} className="hover:underline">Contato</Link>
                     </li>
-
+                    <li>
+                        <Link to={"/"} className="hover:underline">Cadastrar Produto</Link>
+                    </li>
                 </ul>
                 {/* Botão Perfil com menu suspenso para todos */}
                 <div className="relative" ref={menuRef}>
@@ -81,21 +83,21 @@ const NavBar = () => {
                                 Meu Perfil
                             </Link>
                             <Link
-                                to="/settings"
+                                to="/homeadm"
                                 className="block px-4 py-2 hover:bg-gray-100"
                                 onClick={() => setMenuOpen(false)}
                             >
                                 Compras realizadas
                             </Link>
                             <Link
-                                to="/settings"
+                                to="/homeadm"
                                 className="block px-4 py-2 hover:bg-gray-100"
                                 onClick={() => setMenuOpen(false)}
                             >
                                 ADM  
                             </Link>
                             <Link
-                                to="/achievements"
+                                to="/"
                                 className="block px-4 py-2 hover:bg-gray-100"
                                 onClick={() => setMenuOpen(false)}
                             >

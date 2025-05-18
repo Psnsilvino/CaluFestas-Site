@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import NavBar from '../components/NavBar';
+import NavBar from '../components/NavBarlogin';
 import React, { useState } from 'react';
 import axios from 'axios';
 
@@ -8,12 +8,12 @@ const EsqueceuSenha: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     try {
       const response = await axios.post('http://localhost:8080/api/clients/ForgotPassword', {
         email: email,
       });
-  
+
       if (response.status === 201) {
         alert('Instruções de recuperação enviadas com sucesso!');
       } else {
@@ -29,8 +29,18 @@ const EsqueceuSenha: React.FC = () => {
     <>
       <NavBar />
       <div className="flex h-screen">
-        <div className="w-1/2 bg-blue-900 flex items-center justify-center relative">
-          <h1 className="text-white text-5xl font-bold">CaLu - Festas e Eventos</h1>
+        <div
+          className="w-1/2 flex items-center justify-center relative"
+          style={{
+            backgroundImage: "url('src/assets/foto 6.jpg')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        >
+          {/* Overlay para deixar o texto legível */}
+          <div className="absolute inset-0 bg-black opacity-50"></div>
+          {/* Texto sobre a imagem */}
+          <h1 className="relative text-white text-5xl font-bold z-10">CaLu - Festas e Eventos</h1>
         </div>
 
         <div className="w-1/2 bg-gray-100 flex items-center justify-center">
@@ -49,6 +59,7 @@ const EsqueceuSenha: React.FC = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full pl-4 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                  required
                 />
               </div>
 

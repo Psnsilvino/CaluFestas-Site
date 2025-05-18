@@ -1,4 +1,4 @@
-import NavBar from '../components/NavBar';
+import NavBar from '../components/NavBarlogin';
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -30,8 +30,18 @@ const Register: React.FC = () => {
     <>
       <NavBar />
       <div className="flex h-screen">
-        <div className="w-1/2 bg-blue-900 flex items-center justify-center relative">
-          <h1 className="text-white text-5xl font-bold">CaLu - Festas e Eventos</h1>
+        <div
+          className="w-1/2 flex items-center justify-center relative"
+          style={{
+            backgroundImage: "url('src/assets/foto 9.jpg')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        >
+          {/* Overlay para deixar o texto legível */}
+          <div className="absolute inset-0 bg-black opacity-50"></div>
+          {/* Texto sobre a imagem */}
+          <h1 className="relative text-white text-5xl font-bold z-10">CaLu - Festas e Eventos</h1>
         </div>
 
         <div className="w-1/2 bg-gray-100 flex items-center justify-center">
@@ -40,7 +50,7 @@ const Register: React.FC = () => {
             <p className="text-gray-600 mb-8">Registre-se para começar!</p>
 
             <form onSubmit={handleSubmit}>
-            <div className="mb-4">
+              <div className="mb-4">
                 <input
                   type="text"
                   name="nome"
@@ -48,6 +58,7 @@ const Register: React.FC = () => {
                   value={formData.nome}
                   onChange={handleChange}
                   className="w-full pl-4 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                  required
                 />
               </div>
 
@@ -59,6 +70,7 @@ const Register: React.FC = () => {
                   value={formData.email}
                   onChange={handleChange}
                   className="w-full pl-4 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                  required
                 />
               </div>
 
@@ -70,6 +82,7 @@ const Register: React.FC = () => {
                   value={formData.senha}
                   onChange={handleChange}
                   className="w-full pl-4 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                  required
                 />
               </div>
 
@@ -85,9 +98,8 @@ const Register: React.FC = () => {
               Já possui uma conta?{' '}
               <Link to="/login" className="text-blue-600 hover:underline">
                 Acesse sua conta aqui!
-                </Link>
+              </Link>
             </p> 
-
           </div>
         </div>
       </div>

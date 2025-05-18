@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import NavBar from '../components/NavBar';
+import NavBar from '../components/NavBarADM';
 import { Link } from 'react-router-dom';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
@@ -82,6 +82,12 @@ const Home: React.FC = () => {
               <div className="text-4xl">🚛</div>
               <h2 className="text-sm font-bold">Contato</h2>
             </div>
+          </Link>
+          <Link to={"/cadastrarproduto"}>
+            <div className="text-white p-4 rounded-lg shadow-md flex flex-col items-center gap-4 hover:bg-yellow-500 transition-all" style={{ backgroundColor: "#F59E0B" }}>
+              <div className="text-4xl">📝</div>
+              <h2 className="text-sm font-bold">Cadastrar Produto</h2>
+             </div>
           </Link>
         </div>
 
