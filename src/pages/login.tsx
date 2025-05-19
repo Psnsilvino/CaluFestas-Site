@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import NavBar from '../components/NavBarlogin';
 import React, { useState } from 'react';
 import axios from 'axios';
@@ -9,6 +9,7 @@ const Login: React.FC = () => {
     email: '',
     senha: '',
   });
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -18,8 +19,13 @@ const Login: React.FC = () => {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:8080/api/clients/login', formData);
+      const token = response.data.token;
+
+      // Salvar o token (pode ser localStorage ou sessionStorage)
+      localStorage.setItem('token', token);
       console.log('Login bem-sucedido:', response.data);
       alert('Login realizado com sucesso!');
+      navigate('/');
     } catch (error) {
       console.error('Erro ao acessar sua conta:', error);
       alert('Erro ao acessar sua conta. Tente novamente.');

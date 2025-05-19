@@ -3,6 +3,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Home from './pages/home.tsx';
+import HomeAdm from './pages/homeadm.tsx';
 import Cadastro from './pages/cadastro.tsx';
 import Login from './pages/login.tsx';
 import Catalago from './pages/catalogo';
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
     {
         path: "/",
         element: <Home />,
+    },
+    {
+        path: "/Homeadm",
+        element: <HomeAdm />,
     },
     {
         path: "/cadastro",
