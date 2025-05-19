@@ -1,10 +1,11 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import NavBar from '../components/NavBarlogin';
 import React, { useState } from 'react';
 import axios from 'axios';
 
 const EsqueceuSenha: React.FC = () => {
   const [email, setEmail] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -16,6 +17,7 @@ const EsqueceuSenha: React.FC = () => {
 
       if (response.status === 201) {
         alert('Instruções de recuperação enviadas com sucesso!');
+        navigate('/codigodeverificacao');
       } else {
         alert('Não foi possível enviar as instruções. Tente novamente.');
       }

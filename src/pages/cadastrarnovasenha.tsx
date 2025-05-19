@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import NavBar from '../components/NavBarlogin';
 import React, { useState } from 'react';
 import axios from 'axios';
@@ -6,6 +6,8 @@ import axios from 'axios';
 const CadastrarNovaSenha: React.FC = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const location = useLocation();
+  const emailS = location.state;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,6 +19,7 @@ const CadastrarNovaSenha: React.FC = () => {
 
     try {
       const response = await axios.post('http://localhost:8080/api/clients/ResetPassword', {
+        email: emailS,
         password: password,
       });
 
