@@ -11,6 +11,8 @@ import CadastrarProduto from './pages/cadastrarproduto.tsx';
 import EsqueceuSenha from './pages/esqueceusenha.tsx'; // Importando a página de recuperação de senha
 import CadastrarNovaSenha from './pages/cadastrarnovasenha.tsx';
 import CodigoDeVerificacao from './pages/codigodeverificacao.tsx';
+import Carrinho from './pages/carrinho.tsx';
+
 
 const setCart = (cart: any) => {
     console.log('Carrinho atualizado:', cart);
@@ -52,6 +54,10 @@ const router = createBrowserRouter([
     {
         path:"/codigodeverificacao",
         element: <CodigoDeVerificacao />,
+    },
+    {
+        path:"/carrinho",
+        element: <Carrinho />,
     },
 ]);
 
