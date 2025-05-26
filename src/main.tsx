@@ -12,6 +12,7 @@ import EsqueceuSenha from './pages/esqueceusenha.tsx'; // Importando a página d
 import CadastrarNovaSenha from './pages/cadastrarnovasenha.tsx';
 import CodigoDeVerificacao from './pages/codigodeverificacao.tsx';
 import Carrinho from './pages/carrinho.tsx';
+import Redirecionamento from './pages/redirecionamento.tsx';
 
 
 const setCart = (cart: any) => {
@@ -58,6 +59,10 @@ const router = createBrowserRouter([
     {
         path:"/carrinho",
         element: <Carrinho />,
+    },
+    {
+        path:"/redirecionamento",
+        element: <Redirecionamento />,
     },
 ]);
 
