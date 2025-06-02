@@ -13,7 +13,6 @@ import instagram1 from '../assets/foto 13.jpg';
 import instagram2 from '../assets/foto 11.jpg';
 import instagram3 from '../assets/foto 12.jpg';
 
-
 const Home: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const images = [foto1, foto2, foto3, foto4, foto5];
@@ -57,43 +56,34 @@ const Home: React.FC = () => {
           </div>
         </div>
 
-        {/* Grid de Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-5 gap-8 w-full px-6 max-w-5xl mb-10">
-          <Link to={"/catalogo"}>
-            <div className="text-white p-4 rounded-lg shadow-md flex flex-col items-center gap-4 hover:bg-yellow-500 transition-all" style={{ backgroundColor: "#F59E0B" }}>
-              <div className="text-4xl">📄</div>
-              <h2 className="text-sm font-bold">Catálogo</h2>
-            </div>
-          </Link>
-          <Link to="/cadastrarnovasenha">
-            <div className="text-white p-4 rounded-lg shadow-md flex flex-col items-center gap-4 hover:bg-yellow-500 transition-all" style={{ backgroundColor: "#F59E0B" }}>
-              <div className="text-4xl">👥</div>
-              <h2 className="text-sm font-bold">Locação</h2>
-            </div>
-          </Link>
-          <Link to={"/faq"}>
-            <div className="text-white p-4 rounded-lg shadow-md flex flex-col items-center gap-4 hover:bg-yellow-500 transition-all" style={{ backgroundColor: "#F59E0B" }}>
-              <div className="text-4xl">❓</div>
-              <h2 className="text-sm font-bold">FAQ</h2>
-            </div>
-          </Link>
-          <Link to={"/contato"}>
-            <div className="text-white p-4 rounded-lg shadow-md flex flex-col items-center gap-4 hover:bg-yellow-500 transition-all" style={{ backgroundColor: "#F59E0B" }}>
-              <div className="text-4xl">🚛</div>
-              <h2 className="text-sm font-bold">Contato</h2>
-            </div>
-          </Link>
-          <Link to={"/cadastrarproduto"}>
-            <div className="text-white p-4 rounded-lg shadow-md flex flex-col items-center gap-4 hover:bg-yellow-500 transition-all" style={{ backgroundColor: "#F59E0B" }}>
-              <div className="text-4xl">📝</div>
-              <h2 className="text-sm font-bold">Cadastrar Produto</h2>
-             </div>
-          </Link>
-        </div>
-
-      
-        <div className="w-full py-10">
-          {/* Seção vazia */}
+        {/* Grid de Cards Centralizado */}
+        <div className="w-full flex justify-center mb-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl w-full px-4">
+            <Link to={"/catalogo"}>
+              <div className="text-white p-4 rounded-lg shadow-md flex flex-col items-center gap-4 hover:bg-yellow-500 transition-all" style={{ backgroundColor: "#F59E0B" }}>
+                <div className="text-4xl">📄</div>
+                <h2 className="text-sm font-bold">Catálogo</h2>
+              </div>
+            </Link>
+            <Link to="/carrinho">
+              <div className="text-white p-4 rounded-lg shadow-md flex flex-col items-center gap-4 hover:bg-yellow-500 transition-all" style={{ backgroundColor: "#F59E0B" }}>
+                <div className="text-4xl">👥</div>
+                <h2 className="text-sm font-bold">Locação</h2>
+              </div>
+            </Link>
+            <Link to={"/FAQ"}>
+              <div className="text-white p-4 rounded-lg shadow-md flex flex-col items-center gap-4 hover:bg-yellow-500 transition-all" style={{ backgroundColor: "#F59E0B" }}>
+                <div className="text-4xl">❓</div>
+                <h2 className="text-sm font-bold">FAQ</h2>
+              </div>
+            </Link>
+            <Link to={"/cadastrarproduto"}>
+              <div className="text-white p-4 rounded-lg shadow-md flex flex-col items-center gap-4 hover:bg-yellow-500 transition-all" style={{ backgroundColor: "#F59E0B" }}>
+                <div className="text-4xl">📝</div>
+                <h2 className="text-sm font-bold">Cadastrar Produto</h2>
+              </div>
+            </Link>
+          </div>
         </div>
 
         {/* Informações */}
@@ -103,7 +93,7 @@ const Home: React.FC = () => {
               <h3 className="text-xl font-bold mb-4">CaLu Festas e Eventos</h3>
               <p>Organizamos eventos inesquecíveis! Entre em contato para transformar seu sonho em realidade.</p>
               <p>📞 Telefone: (11) 1234-5678</p>
-              <p>📸: <a href="https://www.instagram.com/calu_conceitos?utm_source=ig_web_button_share_sheet&igshid=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer">@calu_conceitos</a></p>
+              <p>📸: <a href="https://www.instagram.com/calu_conceitos?utm_source=ig_web_button_share_sheet&igshid=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" className="underline">@calu_conceitos</a></p>
             </div>
             <div>
               <a href="https://www.instagram.com/calu_conceitos?utm_source=ig_web_button_share_sheet&igshid=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer">

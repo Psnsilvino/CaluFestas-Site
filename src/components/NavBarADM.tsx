@@ -46,19 +46,19 @@ const NavBar = () => {
                 {/* Links */}
                 <ul className="flex space-x-8 text-lg">
                     <li>
-                        <Link to={"/"} className="hover:underline">Catalogo</Link>
+                        <Link to={"/homeadm"} className="hover:underline">Home</Link>
                     </li>
                     <li>
-                        <Link to={"/"} className="hover:underline">Locação</Link>
+                        <Link to={"/catalogo"} className="hover:underline">Catalogo</Link>
                     </li>
                     <li>
-                        <Link to={"/"} className="hover:underline">FAQ</Link>
+                        <Link to={"/carrinho"} className="hover:underline">Locação</Link>
                     </li>
                     <li>
-                        <Link to={"/"} className="hover:underline">Contato</Link>
+                        <Link to={"/FAQ"} className="hover:underline">FAQ</Link>
                     </li>
                     <li>
-                        <Link to={"/"} className="hover:underline">Cadastrar Produto</Link>
+                        <Link to={"/cadastrarproduto"} className="hover:underline">Cadastrar Produto</Link>
                     </li>
                 </ul>
                 {/* Botão Perfil com menu suspenso para todos */}

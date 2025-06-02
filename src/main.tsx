@@ -13,6 +13,7 @@ import CadastrarNovaSenha from './pages/cadastrarnovasenha.tsx';
 import CodigoDeVerificacao from './pages/codigodeverificacao.tsx';
 import Carrinho from './pages/carrinho.tsx';
 import Redirecionamento from './pages/redirecionamento.tsx';
+import FAQ from './pages/FAQ.tsx';
 
 
 const setCart = (cart: any) => {
@@ -63,6 +64,10 @@ const router = createBrowserRouter([
     {
         path:"/redirecionamento",
         element: <Redirecionamento />,
+    },
+    {
+        path:"/FAQ",
+        element: <FAQ />,
     },
 ]);
 
