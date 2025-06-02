@@ -11,7 +11,7 @@ export default function CadastrarProduto() {
     categoria: "",
     subcategoria: "",
     quantidade: 0,
-    quantidadeEmLocacao: 0,
+    quantidadeemLocacao: 0,
     preco: "",
     descricao: "",
     imagem: "",
@@ -46,22 +46,22 @@ export default function CadastrarProduto() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     const produtoFinal = {
       ...product,
       preco: parseFloat((product.preco as string).replace(",", ".")),
     };
-  
+
     try {
       const response = await axios.post("http://localhost:8080/api/products/register", produtoFinal, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-  
+
       console.log("Produto cadastrado com sucesso:", response.data);
       alert("Produto cadastrado com sucesso!");
-  
+
       // Resetar o formulário
       setProduct({
         _id: "",
@@ -69,7 +69,7 @@ export default function CadastrarProduto() {
         categoria: "",
         subcategoria: "",
         quantidade: 0,
-        quantidadeEmLocacao: 0,
+        quantidadeemLocacao: 0,
         preco: "",
         descricao: "",
         imagem: "",
@@ -84,7 +84,7 @@ export default function CadastrarProduto() {
       }
     }
   };
-  
+
 
   return (
     <>

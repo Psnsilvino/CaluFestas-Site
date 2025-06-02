@@ -3,8 +3,9 @@ import axios from "axios";
 import Navbar from "../components/NavBar";
 import Footer from "../components/Footer";
 import { Product } from "../interfaces/product";
+import { useCart } from "../hooks/useCart";
 
-const Catalago: React.FC<{ setCart: any }> = ({ setCart }) => {
+const Catalago: React.FC = () => {
   const [products, setProducts] = React.useState<Product[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
@@ -13,11 +14,12 @@ const Catalago: React.FC<{ setCart: any }> = ({ setCart }) => {
   const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
   const [selectedSubcategory, setSelectedSubcategory] = React.useState<string | null>(null);
   const productsPerPage = 8;
+  const { addToCart } = useCart();
 
   React.useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/api/products"); // sua API Gin
+        const response = await axios.get("http://localhost:8080/api/products/"); // sua API Gin
         setProducts(response.data);
       } catch (err) {
         console.error(err);
@@ -29,25 +31,6 @@ const Catalago: React.FC<{ setCart: any }> = ({ setCart }) => {
 
     fetchProducts();
   }, []);
-
-  const addToCart = (productId: string, quantity: number) => {
-    console.log(products)
-    if (quantity <= 0) return;
-
-    setCart((prevCart: any) => {
-      const existingProduct = prevCart.find((item: Product) => item._id === productId);
-      if (existingProduct) {
-        return prevCart.map((item: Product) =>
-          item._id === productId
-            ? { ...item, quantity: item.quantidade + quantity }
-            : item
-        );
-      } else {
-        const product = products.find((p) => p._id === productId);
-        return [...prevCart, { _id: productId, name: product?.nome|| "", quantity }];
-      }
-    });
-  };
 
   const filteredProducts = products.filter((product) => {
     if (selectedCategory && product.categoria !== selectedCategory) return false;
@@ -156,7 +139,7 @@ const Catalago: React.FC<{ setCart: any }> = ({ setCart }) => {
                   <input
                     type="number"
                     min="1"
-                    max={product.quantidade}
+                    max={product.quantidade - product.quantidadeemlocacao}
                     defaultValue="1"
                     id={`quantity-${product._id}`}
                     style={{
@@ -181,7 +164,8 @@ const Catalago: React.FC<{ setCart: any }> = ({ setCart }) => {
                         `quantity-${product._id}`
                       ) as HTMLInputElement;
                       const quantity = parseInt(quantityInput.value, 10);
-                      addToCart(product._id, quantity);
+                      addToCart(product, quantity);
+                      console.log(products)
                     }}
                   >
                     Adicionar ao Carrinho

@@ -4,7 +4,7 @@ export interface Product {
   categoria: string;
   subcategoria: string;
   quantidade: number;
-  quantidadeEmLocacao: number;
+  quantidadeemlocacao: number;
   preco: string | number;
   descricao: string;
   imagem: string;
