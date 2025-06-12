@@ -65,7 +65,7 @@ const Home: React.FC = () => {
                 <h2 className="text-sm font-bold">Catálogo</h2>
               </div>
             </Link>
-            <Link to="/cadastrarnovasenha">
+            <Link to="/carrinho">
               <div className="text-white p-4 rounded-lg shadow-md flex flex-col items-center gap-4 hover:bg-yellow-500 transition-all" style={{ backgroundColor: "#F59E0B" }}>
                 <div className="text-4xl">👥</div>
                 <h2 className="text-sm font-bold">Locação</h2>

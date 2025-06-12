@@ -74,15 +74,9 @@ const NavBar = () => {
                     </button>
                     {menuOpen && (
                         <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50">
+
                             <Link
-                                to="/perfil"
-                                className="block px-4 py-2 hover:bg-gray-100"
-                                onClick={() => setMenuOpen(false)}
-                            >
-                                Meu Perfil
-                            </Link>
-                            <Link
-                                to="/settings"
+                                to="/comprasrealizadas"
                                 className="block px-4 py-2 hover:bg-gray-100"
                                 onClick={() => setMenuOpen(false)}
                             >

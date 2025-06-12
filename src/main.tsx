@@ -14,6 +14,7 @@ import CodigoDeVerificacao from './pages/codigodeverificacao.tsx';
 import Carrinho from './pages/carrinho.tsx';
 import Redirecionamento from './pages/redirecionamento.tsx';
 import FAQ from './pages/FAQ.tsx';
+import ComprasRealizadas from './pages/comprasrealizadas.tsx';
 
 
 const setCart = (cart: any) => {
@@ -39,7 +40,7 @@ const router = createBrowserRouter([
     },
     {
         path: "/catalogo",
-        element: <Catalago setCart={setCart} />,
+        element: <Catalago />,
     },
     {
         path: "/cadastrarproduto",
@@ -68,6 +69,14 @@ const router = createBrowserRouter([
     {
         path:"/FAQ",
         element: <FAQ />,
+    },
+    {
+        path:"/comprasrealizadas",
+        element: <ComprasRealizadas />,
+    },
+        {
+        path:"/comprasrealizadasadm",
+        element: <ComprasRealizadas />,
     },
 ]);
 
