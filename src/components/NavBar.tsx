@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 import logo from "../assets/CaLu.png";
 import { useState, useEffect, useRef } from "react";
+import { useAuth } from "../context/useAuth";
 
 const NavBar = () => {
+    const { perfil } = useAuth();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
@@ -30,7 +32,7 @@ const NavBar = () => {
     }, [menuOpen]);
 
     const handleLogout = () => {
-        localStorage.removeItem("authToken");
+        localStorage.removeItem("token");
         setIsAuthenticated(false);
         setMenuOpen(false);
         // redirecione se necessário
@@ -57,6 +59,9 @@ const NavBar = () => {
                     <li>
                         <Link to="/FAQ" className="hover:underline">FAQ</Link>
                     </li>
+                    { perfil && <li>
+                        <Link to={"/cadastrarproduto"} className="hover:underline">Cadastrar Produto</Link>
+                    </li>}
 
 
                 </ul>
@@ -96,7 +101,7 @@ const NavBar = () => {
                             >
                                 Sair
                             </Link>
-                            {isAuthenticated && (
+                            {perfil && (
                                 <button
                                     onClick={handleLogout}
                                     className="w-full text-left px-4 py-2 hover:bg-gray-100"

@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import NavBar from '../components/NavBarlogin';
 import React, { useState } from 'react';
-import axios from 'axios';
+import { useAuth } from '../context/useAuth';
 
 const Login: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +10,7 @@ const Login: React.FC = () => {
     senha: '',
   });
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -18,13 +19,7 @@ const Login: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8080/api/clients/login', formData);
-      const token = response.data.token;
-
-      // Salvar o token (pode ser localStorage ou sessionStorage)
-      localStorage.setItem('token', token);
-      console.log('Login bem-sucedido:', response.data);
-      alert('Login realizado com sucesso!');
+      await login(formData.email, formData.senha)
       navigate('/');
     } catch (error) {
       console.error('Erro ao acessar sua conta:', error);

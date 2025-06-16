@@ -4,6 +4,7 @@ import Navbar from "../components/NavBar";
 import Footer from "../components/Footer";
 import { Product } from "../interfaces/product";
 import { useCart } from "../hooks/useCart";
+import { useAuth } from "../context/useAuth";
 
 const Catalago: React.FC = () => {
   const [products, setProducts] = React.useState<Product[]>([]);
@@ -15,11 +16,17 @@ const Catalago: React.FC = () => {
   const [selectedSubcategory, setSelectedSubcategory] = React.useState<string | null>(null);
   const productsPerPage = 8;
   const { addToCart } = useCart();
+  const token = localStorage.getItem('token');
+  const { perfil } = useAuth();
 
   React.useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/api/products/"); // sua API Gin
+        const response = await axios.get("http://localhost:8080/api/products/", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        }); // sua API Gin
         setProducts(response.data);
       } catch (err) {
         console.error(err);
@@ -30,7 +37,7 @@ const Catalago: React.FC = () => {
     };
 
     fetchProducts();
-  }, []);
+  }, [token]);
 
   const filteredProducts = products.filter((product) => {
     if (selectedCategory && product.categoria !== selectedCategory) return false;
@@ -150,7 +157,7 @@ const Catalago: React.FC = () => {
                       borderRadius: "5px",
                     }}
                   />
-                  <button
+                  {perfil && <button
                     style={{
                       padding: "10px 20px",
                       backgroundColor: "#6c63ff",
@@ -169,7 +176,7 @@ const Catalago: React.FC = () => {
                     }}
                   >
                     Adicionar ao Carrinho
-                  </button>
+                  </button>}
                 </div>
               </div>
             ))}

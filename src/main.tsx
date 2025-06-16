@@ -15,11 +15,8 @@ import Carrinho from './pages/carrinho.tsx';
 import Redirecionamento from './pages/redirecionamento.tsx';
 import FAQ from './pages/FAQ.tsx';
 import ComprasRealizadas from './pages/comprasrealizadas.tsx';
-
-
-const setCart = (cart: any) => {
-    console.log('Carrinho atualizado:', cart);
-};
+import PrivateRoute from "./privateRoutes";
+import { AuthProvider } from './context/authContext.tsx';
 
 const router = createBrowserRouter([
     {
@@ -60,7 +57,7 @@ const router = createBrowserRouter([
     },
     {
         path:"/carrinho",
-        element: <Carrinho />,
+        element: <PrivateRoute><Carrinho/></PrivateRoute>,
     },
     {
         path:"/redirecionamento",
@@ -82,6 +79,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
-        <RouterProvider router={router} />
+        <AuthProvider>
+            <RouterProvider router={router} />
+        </AuthProvider>
     </StrictMode>,
 );
