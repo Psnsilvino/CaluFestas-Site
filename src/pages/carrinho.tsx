@@ -3,6 +3,7 @@ import NavBar from '../components/NavBar';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from "../hooks/useCart";
 import axios from 'axios';
+import { useAuth } from '../context/useAuth';
 
 const CartPage: React.FC = () => {
   const { cart, removeFromCart, clearCart } = useCart();
@@ -17,6 +18,8 @@ const CartPage: React.FC = () => {
   const shipping = 4;
   const total = subtotal + shipping;
   const navigate = useNavigate()
+  const { perfil } = useAuth();
+  const token = localStorage.getItem('token');
 
   const handleSubmit = async () => {
     try {
@@ -26,6 +29,7 @@ const CartPage: React.FC = () => {
         data_entrega: dataEntrega,
         data_retirada: dataRetirada,
         pagamento,
+        email: perfil?.email,
         total,
         items: cart.map(item => ({
           _id: item._id,
@@ -35,11 +39,15 @@ const CartPage: React.FC = () => {
         }))
       };
 
-      const response = await axios.post('http://localhost:8080/api/locations/', payload);
+      const response = await axios.post('http://localhost:8080/api/locations/', payload, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        });;
 
       if (response.status === 201 || response.status === 200) {
         alert('Pedido enviado com sucesso!');
-        navigate("/redirecionamento")
+        navigate("/redirecionamento", { state: { payload } });
         clearCart();
       }
     } catch (error) {
@@ -141,6 +149,7 @@ const CartPage: React.FC = () => {
                   placeholder="Nome"
                   className="w-full px-4 py-2 rounded-md bg-white/20 placeholder-white focus:outline-none"
                   value={nome}
+                  required
                   onChange={(e) => setNome(e.target.value)}
                 />
               </div>
@@ -152,6 +161,7 @@ const CartPage: React.FC = () => {
                   placeholder="Rua x casa y"
                   className="w-full px-4 py-2 rounded-md bg-white/20 placeholder-white focus:outline-none"
                   value={endereco}
+                  required
                   onChange={(e) => setEndereco(e.target.value)}
                 />
               </div>
@@ -161,6 +171,7 @@ const CartPage: React.FC = () => {
                   <label className="block mb-1">Data de entrega</label>
                   <input
                     type="date"
+                    required
                     className="w-full px-4 py-2 rounded-md bg-white/20 placeholder-white focus:outline-none"
                     value={dataEntrega}
                     onChange={(e) => setDataEntrega(e.target.value)}
@@ -170,6 +181,7 @@ const CartPage: React.FC = () => {
                   <label className="block mb-1">Data de retirada</label>
                   <input
                     type="date"
+                    required
                     className="w-full px-4 py-2 rounded-md bg-white/20 placeholder-white focus:outline-none"
                     value={dataRetirada}
                     onChange={(e) => setDataRetirada(e.target.value)}

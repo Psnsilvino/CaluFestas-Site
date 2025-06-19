@@ -16,6 +16,7 @@
     "next": "^15.3.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-qr-code": "^2.0.16",
     "react-responsive-carousel": "^3.2.23",
     "react-router-dom": "^7.3.0",
     "react-slick": "^0.30.3",

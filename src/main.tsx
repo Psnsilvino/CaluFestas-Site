@@ -17,6 +17,7 @@ import FAQ from './pages/FAQ.tsx';
 import ComprasRealizadas from './pages/comprasrealizadas.tsx';
 import PrivateRoute from "./privateRoutes";
 import { AuthProvider } from './context/authContext.tsx';
+import ComprasRealizadasAdm from './pages/comprarrealizadasadm.tsx';
 
 const router = createBrowserRouter([
     {
@@ -69,11 +70,11 @@ const router = createBrowserRouter([
     },
     {
         path:"/comprasrealizadas",
-        element: <ComprasRealizadas />,
+        element: <PrivateRoute><ComprasRealizadas /></PrivateRoute>
     },
-        {
+    {
         path:"/comprasrealizadasadm",
-        element: <ComprasRealizadas />,
+        element: <PrivateRoute><ComprasRealizadasAdm /></PrivateRoute>
     },
 ]);
 

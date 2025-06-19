@@ -145,9 +145,9 @@ const Catalago: React.FC = () => {
                 <div style={{ marginTop: "10px" }}>
                   <input
                     type="number"
-                    min="1"
+                    min="0"
                     max={product.quantidade - product.quantidadeemlocacao}
-                    defaultValue="1"
+                    defaultValue="0"
                     id={`quantity-${product._id}`}
                     style={{
                       width: "60px",

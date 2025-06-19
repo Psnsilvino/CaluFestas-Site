@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/useAuth";
 
 const Cards = () => {
+  const { perfil } = useAuth();
     return (
         <>
             <div className="w-full flex justify-center mb-10">
@@ -11,12 +13,12 @@ const Cards = () => {
                 <h2 className="text-sm font-bold">Catálogo</h2>
               </div>
             </Link>
-            <Link to="/carrinho">
+            {perfil && <Link to="/carrinho">
               <div className="text-white p-4 rounded-lg shadow-md flex flex-col items-center gap-4 hover:bg-yellow-500 transition-all" style={{ backgroundColor: "#F59E0B" }}>
                 <div className="text-4xl">👥</div>
                 <h2 className="text-sm font-bold">Locação</h2>
               </div>
-            </Link>
+            </Link>}
             <Link to={"/FAQ"}>
               <div className="text-white p-4 rounded-lg shadow-md flex flex-col items-center gap-4 hover:bg-yellow-500 transition-all" style={{ backgroundColor: "#F59E0B" }}>
                 <div className="text-4xl">❓</div>

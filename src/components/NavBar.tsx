@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/CaLu.png";
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/useAuth";
@@ -8,6 +8,19 @@ const NavBar = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
+    const navigate = useNavigate();
+
+  const handleRedirect = () => {
+    setMenuOpen(false);
+
+    switch (perfil?.cargo) {
+      case 'admin':
+        navigate('/comprasrealizadasadm');
+        break;
+      default:
+        navigate('/comprasrealizadas'); // rota padrão
+    }
+  };
 
     useEffect(() => {
         const token = localStorage.getItem("authToken");
@@ -35,6 +48,7 @@ const NavBar = () => {
         localStorage.removeItem("token");
         setIsAuthenticated(false);
         setMenuOpen(false);
+        navigate("/")
         // redirecione se necessário
     };
 
@@ -53,13 +67,13 @@ const NavBar = () => {
                     <li>
                         <Link to= "/catalogo" className="hover:underline">Catalogo</Link>
                     </li>
-                    <li>
+                    { perfil &&<li>
                         <Link to="/carrinho" className="hover:underline">Locação</Link>
-                    </li>
+                    </li>}
                     <li>
                         <Link to="/FAQ" className="hover:underline">FAQ</Link>
                     </li>
-                    { perfil && <li>
+                    { perfil?.cargo === "admin" && <li>
                         <Link to={"/cadastrarproduto"} className="hover:underline">Cadastrar Produto</Link>
                     </li>}
 
@@ -80,31 +94,23 @@ const NavBar = () => {
                     {menuOpen && (
                         <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50">
 
-                            <Link
-                                to="/comprasrealizadas"
-                                className="block px-4 py-2 hover:bg-gray-100"
-                                onClick={() => setMenuOpen(false)}
+                            <button
+                                className="block px-4 py-2 hover:underline"
+                                onClick={handleRedirect}
                             >
                                 Compras realizadas
-                            </Link>
-                            <Link
-                                to="/Homeadm"
-                                className="block px-4 py-2 hover:bg-gray-100"
-                                onClick={() => setMenuOpen(false)}
-                            >
-                                ADM  
-                            </Link>
-                            <Link
+                            </button>
+                            {!perfil && <Link
                                 to="/login"
-                                className="block px-4 py-2 hover:bg-gray-100"
+                                className="block px-4 py-2 hover:underline"
                                 onClick={() => setMenuOpen(false)}
                             >
-                                Sair
-                            </Link>
+                                Login
+                            </Link>}
                             {perfil && (
                                 <button
                                     onClick={handleLogout}
-                                    className="w-full text-left px-4 py-2 hover:bg-gray-100"
+                                    className="w-full text-left px-4 py-2 hover:underline"
                                 >
                                     Logout
                                 </button>
