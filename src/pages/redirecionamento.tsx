@@ -22,7 +22,7 @@ Qualquer dúvida, estou à disposição.
   `
 
 
-  const numero = "5561981842084"
+  const numero = "0"
   const mensagemCodificada = encodeURIComponent(mensagem);
   const url = `https://wa.me/${numero}?text=${mensagemCodificada}`
 
