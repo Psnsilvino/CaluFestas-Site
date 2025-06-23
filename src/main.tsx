@@ -18,6 +18,7 @@ import ComprasRealizadas from './pages/comprasrealizadas.tsx';
 import PrivateRoute from "./privateRoutes";
 import { AuthProvider } from './context/authContext.tsx';
 import ComprasRealizadasAdm from './pages/comprarrealizadasadm.tsx';
+import { ToastContainer } from 'react-toastify';
 
 const router = createBrowserRouter([
     {
@@ -82,6 +83,7 @@ createRoot(document.getElementById('root')!).render(
     <StrictMode>
         <AuthProvider>
             <RouterProvider router={router} />
+            <ToastContainer />
         </AuthProvider>
     </StrictMode>,
 );

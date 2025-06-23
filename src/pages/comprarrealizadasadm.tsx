@@ -19,7 +19,7 @@ interface Locacao {
   pagamento: string;
   total: number;
   items: Item[];
-  estado: string; // exemplo: "pendente", "concluida"
+  estado: string; 
 }
 
 

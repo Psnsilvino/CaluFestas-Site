@@ -65,10 +65,10 @@ const NavBar = () => {
                         <Link to="/" className="hover:underline">Home</Link>
                     </li>
                     <li>
-                        <Link to= "/catalogo" className="hover:underline">Catalogo</Link>
+                        <Link to= "/catalogo" className="hover:underline">Catálogo</Link>
                     </li>
                     { perfil &&<li>
-                        <Link to="/carrinho" className="hover:underline">Locação</Link>
+                        <Link to="/carrinho" className="hover:underline">Carrinho🛒</Link>
                     </li>}
                     <li>
                         <Link to="/FAQ" className="hover:underline">FAQ</Link>

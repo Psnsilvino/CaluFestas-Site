@@ -2,6 +2,7 @@
 import { ReactNode } from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "./context/useAuth";
+import { toast } from "react-toastify";
 
 interface PrivateRouteProps {
   children: ReactNode;
@@ -15,7 +16,7 @@ function PrivateRoute({ children }: PrivateRouteProps) {
   }
   
   if (!perfil) {
-    alert("Voce precisa estar logado!")
+    toast.error("Você precisa estar logado", { toastId: "LoginPreciso" })
     return <Navigate to="/login" />;
   }
   

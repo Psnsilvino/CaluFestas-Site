@@ -3,6 +3,7 @@ import React, { useState, useEffect, ReactNode } from "react";
 import { AuthContext, AuthContextType } from "./authContextBase";
 import { User } from "../interfaces/user";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [perfil, setPerfil] = useState<User | null>(null);
@@ -36,6 +37,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const profile = await axios.get<User>("http://localhost:8080/api/privateClients/me", {
         headers: { Authorization: `Bearer ${token}` },
       });
+      toast.success("Bem-vindo(a)", { toastId: "login-sucesso" });
       setPerfil(profile.data);
     }
   }

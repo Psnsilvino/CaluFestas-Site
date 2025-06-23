@@ -4,30 +4,89 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from "../hooks/useCart";
 import axios from 'axios';
 import { useAuth } from '../context/useAuth';
+import { IMaskInput } from 'react-imask';
+import dayjs from 'dayjs';
+import { toast } from 'react-toastify';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
 
 const CartPage: React.FC = () => {
   const { cart, removeFromCart, clearCart } = useCart();
 
   const [nome, setNome] = useState('');
   const [endereco, setEndereco] = useState('');
-  const [dataEntrega, setDataEntrega] = useState('');
-  const [dataRetirada, setDataRetirada] = useState('');
+  const [dataEntregaStr, setDataEntregaStr] = useState('');
+  const [dataRetiradaStr, setDataRetiradaStr] = useState('');
   const [pagamento, setPagamento] = useState('Pix'); // default
 
-  const subtotal = cart.reduce((acc, item) => acc + Number(item.preco), 0);
-  const shipping = 4;
-  const total = subtotal + shipping;
+  const subtotal = cart.reduce((acc, item) => acc + Number(item.preco) * item.quantidade, 0);
+
+  const total = subtotal;
   const navigate = useNavigate()
   const { perfil } = useAuth();
   const token = localStorage.getItem('token');
+  
+
+  // Função auxiliar para converter string -> Date
+const parseDataHora = (str: string): Date | null => {
+  const date = dayjs(str, 'DD-MM-YYYY HH:mm', true);
+  console.log(str)
+  return date.isValid() ? date.toDate() : null;
+};
 
   const handleSubmit = async () => {
     try {
+      const dataEntregaDate = parseDataHora(dataEntregaStr);
+      const dataRetiradaDate = parseDataHora(dataRetiradaStr);
+      const hoje = new Date();
+      hoje.setHours(0, 0, 0, 0); // zera o horário para comparar só as datas
+
+      if (dataEntregaDate == null) {
+        toast.error("Formato de data de entrega errado", { toastId: "dataEntregaErrada" })
+        console.log(dataEntregaDate)
+        // setDataEntregaStr("")
+        return
+      }
+
+      if (dataRetiradaDate == null) {
+        toast.error("Formato de data de retirada errado", { toastId: "dataRetiradaErrada" })
+        setDataRetiradaStr("")
+        return
+      }
+
+      if (dataEntregaDate <= hoje) {
+        toast.error("Não é possivel fazer uma locação antes do dia de amanhã", { toastId: "dataEntregaErradaHoje" })
+        setDataEntregaStr("")
+        return
+      }
+
+      if (dataRetiradaDate <= hoje) {
+        toast.error("Não é possivel fazer a retirada antes do dia de amanhã", { toastId: "dataRetiradaErradaHoje" })
+        setDataRetiradaStr("")
+        return
+      }
+
+      if (dataEntregaDate == dataRetiradaDate) {
+        toast.error("Não é possivel fazer a locacao e a retirada na mesma data e horario", { toastId: "dataRetiradaErradaHoje" })
+        // setDataRetiradaStr("")
+        return
+      }
+
+      if (dataRetiradaDate < dataEntregaDate) {
+        toast.error("A data de retirada não pode ser anterior à data de entrega.", { toastId: "DatasRuins" });
+        return;
+      }
+
+      if (!nome || !endereco || !dataEntregaDate || !dataRetiradaDate) {
+        toast.error("Preencha todos os campos obrigatórios!", { toastId: "CamposObrigatorio" });
+        return;
+      }
+
       const payload = {
         nome,
         endereco,
-        data_entrega: dataEntrega,
-        data_retirada: dataRetirada,
+        data_entrega: dataEntregaDate.toISOString(),
+        data_retirada: dataRetiradaDate.toISOString(),
         pagamento,
         email: perfil?.email,
         total,
@@ -107,7 +166,7 @@ const CartPage: React.FC = () => {
                     <div className="flex items-center border px-2 py-1 rounded-md">
                       <span>{item.quantidade}</span>
                     </div>
-                    <span className="font-semibold">R${item.preco}</span>
+                    <span className="font-semibold">R${Number(item.preco).toFixed(2)}</span>
                     <button
                       className="text-gray-400 hover:text-red-500"
                       onClick={() => removeFromCart(item._id)}
@@ -169,22 +228,22 @@ const CartPage: React.FC = () => {
               <div className="flex gap-4">
                 <div className="w-1/2">
                   <label className="block mb-1">Data de entrega</label>
-                  <input
-                    type="date"
-                    required
-                    className="w-full px-4 py-2 rounded-md bg-white/20 placeholder-white focus:outline-none"
-                    value={dataEntrega}
-                    onChange={(e) => setDataEntrega(e.target.value)}
+                  <IMaskInput
+                    mask="00-00-0000 00:00"
+                    value={dataEntregaStr}
+                    onAccept={(value) => setDataEntregaStr(value)}
+                    placeholder="dd-mm-aaaa hh:mm"
+                    className="w-full px-4 py-2 rounded-md bg-white/20 placeholder-white focus:outline-none text-white"
                   />
                 </div>
                 <div className="w-1/2">
                   <label className="block mb-1">Data de retirada</label>
-                  <input
-                    type="date"
-                    required
-                    className="w-full px-4 py-2 rounded-md bg-white/20 placeholder-white focus:outline-none"
-                    value={dataRetirada}
-                    onChange={(e) => setDataRetirada(e.target.value)}
+                  <IMaskInput
+                    mask="00-00-0000 00:00"
+                    value={dataRetiradaStr}
+                    onAccept={(value) => setDataRetiradaStr(value)}
+                    placeholder="dd-mm-aaaa hh:mm"
+                    className="w-full px-4 py-2 rounded-md bg-white/20 placeholder-white focus:outline-none text-white"
                   />
                 </div>
               </div>
@@ -192,8 +251,7 @@ const CartPage: React.FC = () => {
 
             <div className="mt-6 space-y-1 text-sm">
               <div className="flex justify-between font-semibold">
-                <span>Total (Frete a combinar)</span>
-                <span>R${total}</span>
+                <span>Frete a ser combinado após a finalização no Whatsapp</span>
               </div>
             </div>
 
@@ -202,7 +260,7 @@ const CartPage: React.FC = () => {
               disabled={cart.length === 0}
               onClick={handleSubmit}
             >
-              <span>R${total}</span>
+              <span>Total R${total.toFixed(2)}</span>
               <span>Finalizar Pedido →</span>
             </button>
           </div>
