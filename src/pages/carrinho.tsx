@@ -42,7 +42,7 @@ const CartPage: React.FC = () => {
 
       if (dataEntregaDate == null) {
         toast.error("Formato de data de entrega errado", { toastId: "dataEntregaErrada" })
-        // setDataEntregaStr("")
+        setDataEntregaStr("")
         return
       }
 
@@ -66,7 +66,7 @@ const CartPage: React.FC = () => {
 
       if (dataEntregaDate == dataRetiradaDate) {
         toast.error("Não é possivel fazer a locacao e a retirada na mesma data e horario", { toastId: "dataRetiradaErradaHoje" })
-        // setDataRetiradaStr("")
+        setDataRetiradaStr("")
         return
       }
 
