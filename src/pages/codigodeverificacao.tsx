@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import NavBar from '../components/NavBarlogin';
 import React, { useState } from 'react';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 // import axios from 'axios'; // Comentado para teste
 
 const CodigoDeVerificacao: React.FC = () => {
@@ -14,10 +15,10 @@ const CodigoDeVerificacao: React.FC = () => {
 
     // --- Simulação para teste da tela ---
     // if (codigo === "123456") {
-    //   alert('Código verificado com sucesso!');
+    //   toast('Código verificado com sucesso!');
     //   navigate('/cadastrarnovasenha');
     // } else {
-    //   alert('Código inválido. Tente novamente.');
+    //   toast('Código inválido. Tente novamente.');
     // }
 
     // --- Código real comentado ---
@@ -27,16 +28,16 @@ const CodigoDeVerificacao: React.FC = () => {
         otp_code: codigo,
       });
       if (response.status === 200) {
-        alert('Código verificado com sucesso!');
+        toast.success('Código verificado com sucesso!');
         navigate('/cadastrarnovasenha', { state: email });
       } else {
-        alert('Código inválido. Tente novamente.');
+        toast.error('Código inválido. Tente novamente.');
       }
     } catch (error: any) {
       if (error.response && error.response.data && error.response.data.message) {
-        alert('Erro: ' + error.response.data.message);
+        toast.error('Erro: ' + error.response.data.message);
       } else {
-        alert('Erro ao verificar código. Verifique o console.');
+        toast.error('Erro ao verificar código. Verifique o console.');
       }
       console.error(error);
     }

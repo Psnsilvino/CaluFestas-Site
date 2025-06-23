@@ -25,14 +25,13 @@ const CartPage: React.FC = () => {
   const navigate = useNavigate()
   const { perfil } = useAuth();
   const token = localStorage.getItem('token');
-  
+
 
   // Função auxiliar para converter string -> Date
-const parseDataHora = (str: string): Date | null => {
-  const date = dayjs(str, 'DD-MM-YYYY HH:mm', true);
-  console.log(str)
-  return date.isValid() ? date.toDate() : null;
-};
+  const parseDataHora = (str: string): Date | null => {
+    const date = dayjs(str, 'DD-MM-YYYY HH:mm', true);
+    return date.isValid() ? date.toDate() : null;
+  };
 
   const handleSubmit = async () => {
     try {
@@ -43,7 +42,6 @@ const parseDataHora = (str: string): Date | null => {
 
       if (dataEntregaDate == null) {
         toast.error("Formato de data de entrega errado", { toastId: "dataEntregaErrada" })
-        console.log(dataEntregaDate)
         // setDataEntregaStr("")
         return
       }
@@ -85,8 +83,8 @@ const parseDataHora = (str: string): Date | null => {
       const payload = {
         nome,
         endereco,
-        data_entrega: dataEntregaDate.toISOString(),
-        data_retirada: dataRetiradaDate.toISOString(),
+        data_entrega: dataEntregaStr,
+        data_retirada: dataRetiradaStr,
         pagamento,
         email: perfil?.email,
         total,
@@ -99,19 +97,19 @@ const parseDataHora = (str: string): Date | null => {
       };
 
       const response = await axios.post('http://localhost:8080/api/locations/', payload, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          }
-        });;
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });;
 
       if (response.status === 201 || response.status === 200) {
-        alert('Pedido enviado com sucesso!');
+        toast.success('Pedido enviado com sucesso!');
         navigate("/redirecionamento", { state: { payload } });
         clearCart();
       }
     } catch (error) {
       console.error(error);
-      alert('Erro ao enviar pedido. Tente novamente.');
+      toast('Erro ao enviar pedido. Tente novamente.');
     }
   };
 
@@ -166,7 +164,7 @@ const parseDataHora = (str: string): Date | null => {
                     <div className="flex items-center border px-2 py-1 rounded-md">
                       <span>{item.quantidade}</span>
                     </div>
-                    <span className="font-semibold">R${Number(item.preco).toFixed(2)}</span>
+                    <span className="font-semibold">R${(Number(item.preco) * item.quantidade).toFixed(2)}</span>
                     <button
                       className="text-gray-400 hover:text-red-500"
                       onClick={() => removeFromCart(item._id)}
@@ -189,9 +187,8 @@ const parseDataHora = (str: string): Date | null => {
                 {['Pix', 'Cartão', 'Dinheiro'].map((type) => (
                   <button
                     key={type}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium capitalize ${
-                      pagamento === type ? 'bg-white text-blue-900' : 'bg-white/20 text-white'
-                    }`}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium capitalize ${pagamento === type ? 'bg-white text-blue-900' : 'bg-white/20 text-white'
+                      }`}
                     onClick={() => setPagamento(type)}
                   >
                     {type}

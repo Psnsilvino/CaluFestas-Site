@@ -3,6 +3,7 @@ import Head from "next/head";
 import Navbar from "../components/NavBar"; // Certifique-se de que o caminho está correto
 import axios from "axios";
 import { Product } from "../interfaces/product";
+import { toast } from "react-toastify";
 
 export default function CadastrarProduto() {
   const [product, setProduct] = useState<Product>({
@@ -11,7 +12,7 @@ export default function CadastrarProduto() {
     categoria: "",
     subcategoria: "",
     quantidade: 0,
-    quantidadeemLocacao: 0,
+    quantidadeemlocacao: 0,
     preco: "",
     descricao: "",
     imagem: "",
@@ -60,7 +61,7 @@ export default function CadastrarProduto() {
       });
 
       console.log("Produto cadastrado com sucesso:", response.data);
-      alert("Produto cadastrado com sucesso!");
+      toast.success("Produto cadastrado com sucesso!" , { toastId: "ProdutoBom" });
 
       // Resetar o formulário
       setProduct({
@@ -69,7 +70,7 @@ export default function CadastrarProduto() {
         categoria: "",
         subcategoria: "",
         quantidade: 0,
-        quantidadeemLocacao: 0,
+        quantidadeemlocacao: 0,
         preco: "",
         descricao: "",
         imagem: "",
@@ -77,10 +78,10 @@ export default function CadastrarProduto() {
     } catch (error) {
       if (error) {
         console.error("Erro no servidor:", error);
-        alert("Erro ao cadastrar produto: " + error);
+        toast.error("Erro ao cadastrar produto" , { toastId: "ProdutoRuim" });
       } else {
         console.error("Erro de conexão:", error);
-        alert("Erro de conexão com o servidor.");
+        toast.error("Erro de conexão com o servidor." , { toastId: "ServerTuim" });
       }
     }
   };

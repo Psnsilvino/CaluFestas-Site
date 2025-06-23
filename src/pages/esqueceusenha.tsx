@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import NavBar from '../components/NavBarlogin';
 import React, { useState } from 'react';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const EsqueceuSenha: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -16,13 +17,13 @@ const EsqueceuSenha: React.FC = () => {
       });
 
       if (response.status === 201) {
-        alert('Instruções de recuperação enviadas com sucesso!');
+        toast.success('Instruções de recuperação enviadas com sucesso!');
         navigate('/codigodeverificacao');
       } else {
-        alert('Não foi possível enviar as instruções. Tente novamente.');
+        toast.error('Não foi possível enviar as instruções. Tente novamente.');
       }
     } catch (error) {
-      alert('Erro ao enviar email de recuperação. Verifique o console.');
+      toast.error('Erro ao enviar email de recuperação. Verifique o console.');
       console.error(error);
     }
   };

@@ -44,49 +44,79 @@ const ComprasRealizadasAdm: React.FC = () => {
   }, [token]);
 
   const handleConcluir = async (id: string) => {
-    try {
-      await axios.put(`http://localhost:8080/api/locations/${id}`, { estado: 'Concluida' }, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          }
-        })
-      setLocacoes(prev =>
-        prev.map((loc) => (loc._id === id ? { ...loc, estado: 'Concluida' } : loc))
-      );
-    } catch (err) {
-      console.error('Erro ao concluir:', err);
-    }
-  };
+  const locacao = locacoes.find((l) => l._id === id);
+  if (!locacao) return;
+
+  try {
+    await axios.put(`http://localhost:8080/api/locations/${id}`, {
+      estado: 'Concluida',
+      items: locacao.items.map(item => ({
+        _id: item._id,
+        nome: item.nome,
+        quantidade: item.quantidade
+      }))
+    }, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    setLocacoes(prev =>
+      prev.map((loc) => (loc._id === id ? { ...loc, estado: 'Concluida' } : loc))
+    );
+  } catch (err) {
+    console.error('Erro ao concluir:', err);
+  }
+};
+
+const handleRecusar = async (id: string) => {
+  const locacao = locacoes.find((l) => l._id === id);
+  if (!locacao) return;
+
+  try {
+    await axios.put(`http://localhost:8080/api/locations/${id}`, {
+      estado: 'Recusada',
+      items: locacao.items.map(item => ({
+        _id: item._id,
+        nome: item.nome,
+        quantidade: item.quantidade
+      }))
+    }, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    setLocacoes(prev =>
+      prev.map((loc) => (loc._id === id ? { ...loc, estado: 'Recusada' } : loc))
+    );
+  } catch (err) {
+    console.error('Erro ao recusar:', err);
+  }
+};
+
 
   const handleExcluir = async (id: string) => {
-    if (window.confirm('Deseja excluir esta locação?')) {
-      try {
-        await axios.delete(`http://localhost:8080/api/locations/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          }
-        })
-        setLocacoes(prev => prev.filter((loc) => loc._id !== id));
-      } catch (err) {
-        console.error('Erro ao excluir:', err);
-      }
-    }
-  };
+  const locacao = locacoes.find((l) => l._id === id);
+  if (!locacao) return;
 
-  const handleRecusar = async (id: string) => {
+  if (window.confirm('Deseja excluir esta locação?')) {
     try {
-      await axios.put(`http://localhost:8080/api/locations/${id}`, { estado: 'Recusada' }, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          }
-        })
-      setLocacoes(prev =>
-        prev.map((loc) => (loc._id === id ? { ...loc, estado: 'Recusada' } : loc))
-      );
+      await axios.post(`http://localhost:8080/api/locations/${id}/delete`, {
+        
+          items: locacao.items.map(item => ({
+            _id: item._id,
+            nome: item.nome,
+            quantidade: item.quantidade
+          }))
+        
+      },{
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+      setLocacoes(prev => prev.filter((loc) => loc._id !== id));
     } catch (err) {
-      console.error('Erro ao concluir:', err);
+      console.error('Erro ao excluir:', err);
     }
-  };
+  }
+};
+
 
   return (
     <>
@@ -135,13 +165,12 @@ const ComprasRealizadasAdm: React.FC = () => {
                   <span className="font-semibold text-blue-900">Total:</span>
                   <span>R$ {locacao.total.toFixed(2)}</span>
                 </div>
-                <div className="flex gap-2 mt-4">
+                {locacao.estado === "Em analise" && <div className="flex gap-2 mt-4">
                   <button
-                    className={`px-4 py-2 rounded bg-green-600 text-white font-bold hover:bg-green-700 transition ${locacao.estado === 'concluida' ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className={`px-4 py-2 rounded bg-green-600 text-white font-bold hover:bg-green-700 transition `}
                     onClick={() => handleConcluir(locacao._id)}
-                    disabled={locacao.estado === 'concluida'}
                   >
-                    {locacao.estado === 'concluida' ? 'Concluída' : 'Concluir'}
+                    Concluir
                   </button>
                   <button
                     className="px-4 py-2 rounded bg-red-600 text-white font-bold hover:bg-red-700 transition"
@@ -155,7 +184,7 @@ const ComprasRealizadasAdm: React.FC = () => {
                   >
                     Excluir
                   </button>
-                </div>
+                </div>}
               </div>
             ))}
           </div>

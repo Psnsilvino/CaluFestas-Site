@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import NavBar from '../components/NavBarlogin';
 import React, { useState } from 'react';
 import { useAuth } from '../context/useAuth';
+import { toast } from 'react-toastify';
 
 const Login: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -23,7 +24,7 @@ const Login: React.FC = () => {
       navigate('/');
     } catch (error) {
       console.error('Erro ao acessar sua conta:', error);
-      alert('Erro ao acessar sua conta. Tente novamente.');
+      toast.error('Erro ao acessar sua conta. Tente novamente.', { toastId: "LoginRuim" });
     }
   };
 

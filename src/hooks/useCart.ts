@@ -83,7 +83,7 @@ export function useCart() {
 
 
   const clearCart = () => {
-    toast.warn("Carrinho limpo.");
+    toast.warn("Carrinho limpo." , { toastId: "carrinholimpo" });
     setCart([]);
   };
 

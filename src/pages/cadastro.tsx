@@ -2,6 +2,7 @@ import NavBar from '../components/NavBarlogin';
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Register: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -19,10 +20,10 @@ const Register: React.FC = () => {
     try {
       const response = await axios.post('http://localhost:8080/api/clients/', formData);
       console.log('Registro bem-sucedido:', response.data);
-      alert('Registro realizado com sucesso!');
+      toast.success('Registro realizado com sucesso!', { toastId: "RegistroBom" });
     } catch (error) {
       console.error('Erro ao registrar:', error);
-      alert('Erro ao registrar. Tente novamente.');
+      toast.error('Erro ao registrar. Tente novamente.', { toastId: "RegistroRuim" });
     }
   };
 
@@ -93,13 +94,13 @@ const Register: React.FC = () => {
                 Registrar-se
               </button>
             </form>
-            
+
             <p className="mt-4 text-center text-gray-600">
               Já possui uma conta?{' '}
               <Link to="/login" className="text-blue-600 hover:underline">
                 Acesse sua conta aqui!
               </Link>
-            </p> 
+            </p>
           </div>
         </div>
       </div>

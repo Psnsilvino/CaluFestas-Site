@@ -49,6 +49,7 @@ const NavBar = () => {
         setIsAuthenticated(false);
         setMenuOpen(false);
         navigate("/")
+        window.location.reload();
         // redirecione se necessário
     };
 

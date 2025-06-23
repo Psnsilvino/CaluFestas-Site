@@ -172,7 +172,6 @@ const Catalago: React.FC = () => {
                       ) as HTMLInputElement;
                       const quantity = parseInt(quantityInput.value, 10);
                       addToCart(product, quantity);
-                      console.log(products)
                     }}
                   >
                     Adicionar ao Carrinho

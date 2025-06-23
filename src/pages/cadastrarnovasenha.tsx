@@ -2,6 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import NavBar from '../components/NavBarlogin';
 import React, { useState } from 'react';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const CadastrarNovaSenha: React.FC = () => {
   const [password, setPassword] = useState('');
@@ -13,7 +14,7 @@ const CadastrarNovaSenha: React.FC = () => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      alert('As senhas não coincidem. Tente novamente.');
+      toast.error('As senhas não coincidem. Tente novamente.', { toastId: "Senhas-diferentes" })
       return;
     }
 
@@ -24,12 +25,12 @@ const CadastrarNovaSenha: React.FC = () => {
       });
 
       if (response.status === 200) {
-        alert('Senha cadastrada com sucesso!');
+        toast.success('Senha cadastrada com sucesso!' , { toastId: "Senhas-nova" });
       } else {
-        alert('Não foi possível cadastrar a nova senha. Tente novamente.');
+        toast.error('Não foi possível cadastrar a nova senha. Tente novamente.', { toastId: "Senhas-erro" });
       }
     } catch (error) {
-      alert('Erro ao cadastrar nova senha. Verifique o console.');
+      toast.error('Erro ao cadastrar nova senha. Verifique o console.' , { toastId: "Senhas-nova-erro" });
       console.error(error);
     }
   };
