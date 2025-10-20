@@ -1,16 +1,15 @@
 import React from 'react';
-import NavBar from '../components/NavBar';
+import NavBar from '../components/NavBar.tsx';
 import CaLuLogo from '../assets/CaLu.png';
 import foto1 from '../assets/foto 1.jpg';
 import foto2 from '../assets/foto 2.jpg';
 import foto3 from '../assets/foto 3.jpg';
 import foto4 from '../assets/foto 4.jpg';
 import fotoCalu from '../assets/foto calu .jpeg';
-import folha1 from '../assets/folha 1.png';
 import folha2 from '../assets/folha 2.png';
 import folha3 from '../assets/folha 3.png';
 import folha4 from '../assets/folha 4.png';
-import folha5 from '../assets/folha 5.png';
+
 
 
 const Home: React.FC = () => {
@@ -34,11 +33,11 @@ const Home: React.FC = () => {
           <div className="text-center max-w-4xl">
             <h1 className="text-4xl lg:text-6xl font-bold mb-8 leading-tight">
               Transformamos sonhos<br />
-              em <span className="text-yellow-400">Festas Inesquecíveis!</span>
+              em <span className="text-[#c6a875]">Festas Inesquecíveis!</span>
             </h1>
             
             <div className="mb-8">
-              <button className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-10 py-4 rounded-lg transition-all transform hover:scale-105 shadow-lg">
+              <button className="bg-[#c6a875] hover:bg-[#6c63ff] text-white font-bold px-10 py-4 rounded-lg transition-all transform hover:scale-105 shadow-lg">
                 Ver Catálogo
               </button>
             </div>

@@ -1,3 +1,4 @@
+// ...existing code...
 import React from "react";
 import axios from "axios";
 import Navbar from "../components/NavBar";
@@ -16,18 +17,18 @@ const Catalago: React.FC = () => {
   const [selectedSubcategory, setSelectedSubcategory] = React.useState<string | null>(null);
   const productsPerPage = 8;
   const { addToCart } = useCart();
-  const token = localStorage.getItem('token');
   const { perfil } = useAuth();
+  const token = localStorage.getItem("token");
 
   React.useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/api/products/", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          }
-        }); // sua API Gin
-        setProducts(response.data);
+        setLoading(true);
+        setError(null);
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+        const response = await axios.get("http://localhost:8080/api/products/", { headers });
+        // garante que seja array
+        setProducts(Array.isArray(response.data) ? response.data : []);
       } catch (err) {
         console.error(err);
         setError("Erro ao carregar os produtos.");
@@ -49,7 +50,7 @@ const Catalago: React.FC = () => {
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
 
-  const categories = Array.from(new Set(products.map((product) => product.categoria)));
+  const categories = Array.from(new Set(products.map((product) => product.categoria))).filter(Boolean);
   const subcategories = Array.from(
     new Set(
       products
@@ -116,69 +117,97 @@ const Catalago: React.FC = () => {
               gap: "20px",
             }}
           >
-            {currentProducts.map((product) => (
-              <div
-                key={product._id}
-                style={{
-                  textAlign: "center",
-                  border: "1px solid #ddd",
-                  borderRadius: "5px",
-                  padding: "10px",
-                  backgroundColor: "#fff",
-                  boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
-                }}
-              >
-                <img
-                  src={product.imagem}
-                  alt={product.nome}
+            {currentProducts.map((product) => {
+              const maxAvailable = Math.max(0, (product.quantidade || 0) - (product.quantidadeemlocacao || 0));
+              return (
+                <div
+                  key={product._id}
                   style={{
-                    width: "100%",
-                    height: "300px",
-                    objectFit: "contain",
+                    textAlign: "center",
+                    border: "1px solid #ddd",
                     borderRadius: "5px",
-                    backgroundColor: "#f0f0f0",
+                    padding: "10px",
+                    backgroundColor: "#fff",
+                    boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
                   }}
-                />
-                <h3 style={{ fontSize: "18px", margin: "10px 0" }}>{product.nome}</h3>
-                <p style={{ fontSize: "16px", color: "#333" }}>R${product.preco}</p>
-                <p style={{ fontSize: "14px", color: "#666" }}>{product.descricao}</p>
-                <div style={{ marginTop: "10px" }}>
-                  <input
-                    type="number"
-                    min="0"
-                    max={product.quantidade - product.quantidadeemlocacao}
-                    defaultValue="0"
-                    id={`quantity-${product._id}`}
+                >
+                  <img
+                    src={product.imagem}
+                    alt={product.nome}
                     style={{
-                      width: "60px",
-                      padding: "5px",
-                      marginRight: "10px",
-                      border: "1px solid #ddd",
+                      width: "100%",
+                      height: "300px",
+                      objectFit: "contain",
                       borderRadius: "5px",
+                      backgroundColor: "#f0f0f0",
                     }}
                   />
-                  {perfil && <button
-                    style={{
-                      padding: "10px 20px",
-                      backgroundColor: "#6c63ff",
-                      color: "white",
-                      border: "none",
-                      borderRadius: "5px",
-                      cursor: "pointer",
-                    }}
-                    onClick={() => {
-                      const quantityInput = document.getElementById(
-                        `quantity-${product._id}`
-                      ) as HTMLInputElement;
-                      const quantity = parseInt(quantityInput.value, 10);
-                      addToCart(product, quantity);
-                    }}
-                  >
-                    Adicionar ao Carrinho
-                  </button>}
+                  <h3 style={{ fontSize: "18px", margin: "10px 0" }}>{product.nome}</h3>
+                  <p style={{ fontSize: "16px", color: "#333" }}>R${product.preco}</p>
+                  <p style={{ fontSize: "14px", color: "#666" }}>{product.descricao}</p>
+                  <div style={{ marginTop: "10px" }}>
+                    <input
+                      type="number"
+                      min={0}
+                      max={maxAvailable}
+                      defaultValue="0"
+                      id={`quantity-${product._id}`}
+                      style={{
+                        width: "60px",
+                        padding: "5px",
+                        marginRight: "10px",
+                        border: "1px solid #ddd",
+                        borderRadius: "5px",
+                      }}
+                    />
+                    {perfil ? (
+                      <button
+                        style={{
+                          padding: "10px 20px",
+                          backgroundColor: "#6c63ff",
+                          color: "white",
+                          border: "none",
+                          borderRadius: "5px",
+                          cursor: "pointer",
+                        }}
+                        onClick={() => {
+                          const quantityInput = document.getElementById(
+                            `quantity-${product._id}`
+                          ) as HTMLInputElement | null;
+                          if (!quantityInput) return;
+                          const quantity = parseInt(quantityInput.value || "0", 10);
+                          if (isNaN(quantity) || quantity <= 0) {
+                            alert("Informe uma quantidade válida (maior que 0).");
+                            return;
+                          }
+                          if (quantity > maxAvailable) {
+                            alert(`Quantidade máxima disponível: ${maxAvailable}`);
+                            return;
+                          }
+                          addToCart(product, quantity);
+                        }}
+                      >
+                        Adicionar ao Carrinho
+                      </button>
+                    ) : (
+                      <button
+                        style={{
+                          padding: "10px 20px",
+                          backgroundColor: "#ccc",
+                          color: "#333",
+                          border: "none",
+                          borderRadius: "5px",
+                        }}
+                        disabled
+                        title="Faça login para adicionar ao carrinho"
+                      >
+                        Entrar para adicionar
+                      </button>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 
@@ -211,3 +240,4 @@ const Catalago: React.FC = () => {
 };
 
 export default Catalago;
+// ...existing code...
