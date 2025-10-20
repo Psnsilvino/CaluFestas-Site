@@ -10,8 +10,6 @@ import folha2 from '../assets/folha 2.png';
 import folha3 from '../assets/folha 3.png';
 import folha4 from '../assets/folha 4.png';
 
-
-
 const Home: React.FC = () => {
   return (
     <>
