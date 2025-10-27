@@ -8,7 +8,7 @@ import Home from './pages/home.tsx';
 import HomeAdm from './pages/homeadm.tsx';
 import Cadastro from './pages/cadastro.tsx';
 import Login from './pages/login.tsx';
-import Catalago from './pages/catalogo1.tsx';
+import Catalago from './pages/catalogo2.tsx';
 import CadastrarProduto from './pages/cadastrarproduto.tsx';
 import EsqueceuSenha from './pages/esqueceusenha.tsx';
 import CadastrarNovaSenha from './pages/cadastrarnovasenha.tsx';
