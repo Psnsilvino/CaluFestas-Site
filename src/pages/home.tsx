@@ -5,6 +5,11 @@ import foto1 from '../assets/foto 1.jpg';
 import foto2 from '../assets/foto 2.jpg';
 import foto3 from '../assets/foto 3.jpg';
 import foto4 from '../assets/foto 4.jpg';
+import foto5 from '../assets/foto 5.jpg';
+import foto6 from '../assets/foto 6.jpg';
+import foto11 from '../assets/foto 11.jpg';
+import foto12 from '../assets/foto 12.jpg';
+import foto13 from '../assets/foto 13.jpg';
 import fotoCalu from '../assets/foto calu .jpeg';
 import folha2 from '../assets/folha 2.png';
 import folha3 from '../assets/folha 3.png';
@@ -139,22 +144,22 @@ const Home: React.FC = () => {
               </div>
               <div className="group cursor-pointer">
                 <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all transform group-hover:scale-105">
-                  <img src={foto1} alt="Evento 5" className="w-full h-64 object-cover" />
+                  <img src={foto5} alt="Evento 5" className="w-full h-64 object-cover" />
                 </div>
               </div>
               <div className="group cursor-pointer">
                 <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all transform group-hover:scale-105">
-                  <img src={foto2} alt="Evento 6" className="w-full h-64 object-cover" />
+                  <img src={foto13} alt="Evento 6" className="w-full h-64 object-cover" />
                 </div>
               </div>
               <div className="group cursor-pointer">
                 <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all transform group-hover:scale-105">
-                  <img src={foto3} alt="Evento 7" className="w-full h-64 object-cover" />
+                  <img src={foto11} alt="Evento 7" className="w-full h-64 object-cover" />
                 </div>
               </div>
               <div className="group cursor-pointer">
                 <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all transform group-hover:scale-105">
-                  <img src={foto4} alt="Evento 8" className="w-full h-64 object-cover" />
+                  <img src={foto12} alt="Evento 8" className="w-full h-64 object-cover" />
                 </div>
               </div>
             </div>

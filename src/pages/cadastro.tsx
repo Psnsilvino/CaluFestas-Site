@@ -1,14 +1,14 @@
-import NavBar from '../components/NavBarlogin';
-import React, { useState } from 'react';
-import axios from 'axios';
-import { Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import React, { useState } from "react";
+import axios from "axios";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import Home from "../pages/home"; // fundo
 
 const Register: React.FC = () => {
   const [formData, setFormData] = useState({
-    nome: '',
-    email: '',
-    senha: '',
+    nome: "",
+    email: "",
+    senha: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -18,93 +18,92 @@ const Register: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8080/api/clients/', formData);
-      console.log('Registro bem-sucedido:', response.data);
-      toast.success('Registro realizado com sucesso!', { toastId: "RegistroBom" });
+      const response = await axios.post("http://localhost:8080/api/clients/", formData);
+      toast.success("Registro realizado com sucesso!", { toastId: "RegistroBom" });
+      console.log(response.data);
     } catch (error) {
-      console.error('Erro ao registrar:', error);
-      toast.error('Erro ao registrar. Tente novamente.', { toastId: "RegistroRuim" });
+      console.error("Erro ao registrar:", error);
+      toast.error("Erro ao registrar. Tente novamente.", { toastId: "RegistroRuim" });
     }
   };
 
   return (
-    <>
-      <NavBar />
-      <div className="flex h-screen">
-        <div
-          className="w-1/2 flex items-center justify-center relative"
-          style={{
-            backgroundImage: "url('src/assets/foto 9.jpg')",
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-        >
-          {/* Overlay para deixar o texto legível */}
-          <div className="absolute inset-0 bg-black opacity-50"></div>
-          {/* Texto sobre a imagem */}
-          <h1 className="relative text-white text-5xl font-bold z-10">CaLu - Festas e Eventos</h1>
-        </div>
+    <div className="relative h-screen w-full overflow-hidden">
 
-        <div className="w-1/2 bg-gray-100 flex items-center justify-center">
-          <div className="w-full max-w-md">
-            <h2 className="text-3xl font-bold mb-4">Olá!</h2>
-            <p className="text-gray-600 mb-8">Registre-se para começar!</p>
+      {/* FUNDO: HOME */}
+      <div className="absolute inset-0 pointer-events-none">
+        <Home />
+      </div>
 
-            <form onSubmit={handleSubmit}>
-              <div className="mb-4">
-                <input
-                  type="text"
-                  name="nome"
-                  placeholder="Nome Completo"
-                  value={formData.nome}
-                  onChange={handleChange}
-                  className="w-full pl-4 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-                  required
-                />
-              </div>
+      {/* Overlay + Blur */}
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-md"></div>
 
-              <div className="mb-4">
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Endereço de email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="w-full pl-4 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-                  required
-                />
-              </div>
+      {/* CARD */}
+      <div className="relative z-10 flex items-center justify-center h-full px-4">
+        <div className="bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl rounded-2xl p-10 max-w-md w-full">
 
-              <div className="mb-6">
-                <input
-                  type="password"
-                  name="senha"
-                  placeholder="Senha"
-                  value={formData.senha}
-                  onChange={handleChange}
-                  className="w-full pl-4 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-                  required
-                />
-              </div>
+          <h2 className="text-4xl font-bold text-white text-center mb-2">
+            Criar Conta
+          </h2>
+          <p className="text-gray-200 text-center mb-8">
+            Preencha seus dados para continuar
+          </p>
 
-              <button
-                type="submit"
-                className="w-full bg-yellow-500 text-white py-3 rounded-lg font-semibold hover:bg-blue-900 transition"
-              >
-                Registrar-se
-              </button>
-            </form>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <input
+              type="text"
+              name="nome"
+              placeholder="Nome Completo"
+              value={formData.nome}
+              onChange={handleChange}
+              className="w-full rounded-lg bg-white/20 text-white placeholder-gray-200 px-4 py-3 focus:ring-2 focus:ring-[#c6a875] outline-none"
+              required
+            />
 
-            <p className="mt-4 text-center text-gray-600">
-              Já possui uma conta?{' '}
-              <Link to="/login" className="text-blue-600 hover:underline">
-                Acesse sua conta aqui!
-              </Link>
-            </p>
-          </div>
+            <input
+              type="email"
+              name="email"
+              placeholder="Endereço de email"
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full rounded-lg bg-white/20 text-white placeholder-gray-200 px-4 py-3 focus:ring-2 focus:ring-[#c6a875] outline-none"
+              required
+            />
+
+            <input
+              type="password"
+              name="senha"
+              placeholder="Senha"
+              value={formData.senha}
+              onChange={handleChange}
+              className="w-full rounded-lg bg-white/20 text-white placeholder-gray-200 px-4 py-3 focus:ring-2 focus:ring-[#c6a875] outline-none"
+              required
+            />
+
+            <button
+              type="submit"
+              className="w-full py-3 rounded-lg font-semibold text-black transition-transform hover:scale-[1.03]"
+              style={{ backgroundColor: "#c6a875" }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#b89963")}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#c6a875")}
+            >
+              Registrar-se
+            </button>
+          </form>
+
+          <p className="mt-6 text-center text-gray-200">
+            Já possui uma conta?{" "}
+            <Link
+              to="/login"
+              className="font-semibold hover:underline transition"
+              style={{ color: "#c6a875" }}
+            >
+              Acesse sua conta aqui!
+            </Link>
+          </p>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

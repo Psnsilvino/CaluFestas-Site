@@ -1,89 +1,94 @@
-import { Link, useNavigate } from 'react-router-dom';
-import NavBar from '../components/NavBarlogin';
-import React, { useState } from 'react';
-import axios from 'axios';
-import { toast } from 'react-toastify';
+import { Link, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
+import NavBar from "../components/NavBarlogin";
+import Home from "../pages/home"; // ✅ fundo igual ao login
 
 const EsqueceuSenha: React.FC = () => {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:8080/api/clients/ForgotPassword', {
-        email: email,
-      });
+      const response = await axios.post("http://localhost:8080/api/clients/ForgotPassword", { email });
 
       if (response.status === 201) {
-        toast.success('Instruções de recuperação enviadas com sucesso!');
-        navigate('/codigodeverificacao');
+        toast.success("Instruções enviadas com sucesso!");
+        navigate("/codigodeverificacao", { state: email });
       } else {
-        toast.error('Não foi possível enviar as instruções. Tente novamente.');
+        toast.error("Não foi possível enviar as instruções.");
       }
     } catch (error) {
-      toast.error('Erro ao enviar email de recuperação. Verifique o console.');
+      toast.error("Erro ao enviar email de recuperação.");
       console.error(error);
     }
   };
 
   return (
-    <>
-      <NavBar />
-      <div className="flex h-screen">
-        <div
-          className="w-1/2 flex items-center justify-center relative"
-          style={{
-            backgroundImage: "url('src/assets/foto 6.jpg')",
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-        >
-          {/* Overlay para deixar o texto legível */}
-          <div className="absolute inset-0 bg-black opacity-50"></div>
-          {/* Texto sobre a imagem */}
-          <h1 className="relative text-white text-5xl font-bold z-10">CaLu - Festas e Eventos</h1>
-        </div>
+    <div className="relative h-screen w-full overflow-hidden">
 
-        <div className="w-1/2 bg-gray-100 flex items-center justify-center">
-          <div className="w-full max-w-md">
-            <h2 className="text-3xl font-bold mb-4">Recuperar Senha</h2>
-            <p className="text-gray-600 mb-8">
-              Insira o endereço de email associado à sua conta para receber instruções de recuperação.
-            </p>
+      {/* NAVBAR */}
+      <div className="relative z-50">
+        <NavBar />
+      </div>
 
-            <form onSubmit={handleSubmit}>
-              <div className="mb-4">
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Endereço de email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-4 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-                  required
-                />
-              </div>
+      {/* FUNDO: HOME */}
+      <div className="absolute inset-0 pointer-events-none">
+        <Home />
+      </div>
 
-              <button
-                type="submit"
-                className="w-full bg-yellow-500 text-white py-3 rounded-lg font-semibold hover:bg-blue-900 transition"
-              >
-                Enviar Instruções
-              </button>
-            </form>
+      {/* ESCURECIMENTO + BLUR */}
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-md"></div>
 
-            {/* Link para voltar ao login */}
-            <p className="mt-4 text-center text-gray-600">
-              <Link to="/login" className="text-blue-600 hover:underline">
-                Voltar para o Login
-              </Link>
-            </p>
-          </div>
+      {/* CARD */}
+      <div className="relative z-10 flex items-center justify-center h-full px-4">
+        <div className="bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl rounded-2xl p-10 max-w-md w-full">
+
+          <h2 className="text-3xl font-bold text-white text-center mb-2">
+            Recuperar Senha
+          </h2>
+          <p className="text-gray-200 text-center mb-8">
+            Insira o email vinculado à sua conta.
+          </p>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+
+            <input
+              type="email"
+              name="email"
+              placeholder="Seu email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full rounded-lg bg-white/20 text-white placeholder-gray-200 px-4 py-3 focus:ring-2 focus:ring-[#c6a875] outline-none"
+              required
+            />
+
+            <button
+              type="submit"
+              className="w-full py-3 rounded-lg font-semibold text-black transition-transform hover:scale-[1.03]"
+              style={{ backgroundColor: "#c6a875" }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#b89963")}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#c6a875")}
+            >
+              Enviar Instruções
+            </button>
+          </form>
+
+          <p className="mt-6 text-center text-gray-200">
+            <Link
+              to="/login"
+              className="font-semibold hover:underline transition"
+              style={{ color: "#c6a875" }}
+            >
+              Voltar para o login
+            </Link>
+          </p>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
