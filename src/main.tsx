@@ -23,6 +23,7 @@ import DetalhesDoProduto from './pages/detalhesdoproduto.tsx';
 import PrivateRoute from "./privateRoutes";
 import { AuthProvider } from './context/authContext.tsx';
 import { ToastContainer } from 'react-toastify';
+import ChatWidget from './components/ChatWidget.tsx';
 
 const router = createBrowserRouter([
     { path: "/", element: <Home /> },
@@ -47,6 +48,7 @@ createRoot(document.getElementById('root')!).render(
         <AuthProvider>
             <RouterProvider router={router} />
             <ToastContainer />
+            <ChatWidget />
         </AuthProvider>
     </StrictMode>
 );
