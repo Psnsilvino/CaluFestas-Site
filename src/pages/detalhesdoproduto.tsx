@@ -1,16 +1,29 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { Product } from "../interfaces/product";
 import Navbar from "../components/NavBar";
+import Footer from "../components/Footer";
+import { useCart } from "../hooks/useCart";
+import { toast } from "react-toastify";
 
-// =========== IMPORTS DE IMAGENS (fallbacks locais, se a API não tiver imagens) ===========
+// Tipagem local – use sua interface se já tiver uma
+type Product = {
+  _id: string;
+  nome: string;
+  preco: number | string;
+  descricao?: string;
+  categoria?: string;
+  quantidade?: number;
+  quantidadeemlocacao?: number;
+  imagem: string | string[];
+};
+
+// ======= IMAGENS FALLBACK =======
 import mesa140 from "../assets/mesa140.jpeg";
 import cadeira1 from "../assets/cadeira1.jpeg";
-import conjuntopvc1 from "../assets/foto 12.jpg"
-import Footer from "../components/Footer";
+import conjuntopvc1 from "../assets/foto 12.jpg";
 
-// =========== COMPONENTE AUXILIAR ===========
+// ======= CARD RELACIONADO =======
 type RelacionadoProps = { img: string; titulo: string; preco: string; href?: string };
 const ProdutoRelacionado: React.FC<RelacionadoProps> = ({ img, titulo, preco, href = "#" }) => (
   <div className="bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden">
@@ -24,41 +37,50 @@ const ProdutoRelacionado: React.FC<RelacionadoProps> = ({ img, titulo, preco, hr
   </div>
 );
 
-// =========== PÁGINA ===========
+// ======= PÁGINA =======
 const DetalhesDoProduto: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
+  const { addToCart } = useCart();
   const [produtos, setProdutos] = React.useState<Product[]>([]);
   const [produto, setProduto] = React.useState<Product | null>(null);
   const [mainImage, setMainImage] = React.useState<string>("");
   const [quantidade, setQuantidade] = React.useState<number>(1);
   const zoomRef = React.useRef<any>(null);
 
-  // ✅ Medium-Zoom dinâmico
+  // evita duplo clique
+  const addingRef = useRef(false);
+
+  // Medium-Zoom (opcional)
   React.useEffect(() => {
     let mounted = true;
-    import("medium-zoom")
-      .then((mod) => {
+    (async () => {
+      try {
+        const mod = await import("medium-zoom");
         if (!mounted) return;
+        const selector = "#mainImage";
         const mz = mod.default
-          ? mod.default("#mainImage", {
+          ? mod.default(selector, {
               margin: 24,
               background: "#000",
               scrollOffset: 40,
             })
           : null;
         zoomRef.current = mz;
-      })
-      .catch(() => {});
+      } catch {
+        // silencioso
+      }
+    })();
     return () => {
       mounted = false;
-      if (zoomRef.current && typeof zoomRef.current.detach === "function")
+      if (zoomRef.current && typeof zoomRef.current.detach === "function") {
         zoomRef.current.detach();
+      }
     };
   }, [mainImage]);
 
-  // ✅ Buscar produtos do localStorage ou da API Gin
+  // Buscar produtos (localStorage ou API)
   React.useEffect(() => {
     const fetchProdutos = async () => {
       try {
@@ -78,19 +100,78 @@ const DetalhesDoProduto: React.FC = () => {
         const encontrado = lista.find((p) => p._id === id);
         if (encontrado) {
           setProduto(encontrado);
-          setMainImage(encontrado.imagem[0] || mesa140);
+
+          // imagem pode ser string OU string[]
+          const firstImg = Array.isArray(encontrado.imagem)
+            ? encontrado.imagem[0]
+            : encontrado.imagem;
+
+          setMainImage(firstImg || mesa140);
         }
       } catch (error) {
         console.error("Erro ao buscar produtos:", error);
+        toast.error("Não foi possível carregar o produto.", { toastId: "prod-load" });
       }
     };
 
     fetchProdutos();
   }, [id]);
 
+  const estoqueDisponivel = React.useMemo(() => {
+    if (!produto) return 0;
+    const total = Number(produto.quantidade ?? 0);
+    const emLocacao = Number(produto.quantidadeemlocacao ?? 0);
+    return Math.max(total - emLocacao, 0);
+  }, [produto]);
+
+  const imagensProduto: string[] = React.useMemo(() => {
+    if (!produto) return [];
+    if (Array.isArray(produto.imagem)) return produto.imagem;
+    if (typeof produto.imagem === "string" && produto.imagem.trim() !== "") {
+      return [produto.imagem];
+    }
+    return [];
+  }, [produto]);
+
   const adicionarAoCarrinho = () => {
-    if (!produto) return;
-    alert(`Adicionado ${quantidade}x ${produto.nome} ao carrinho.`);
+    if (addingRef.current) return; // trava duplo clique
+    addingRef.current = true;
+
+    try {
+      if (!produto) return;
+      if (quantidade < 1) {
+        toast.info("Quantidade mínima: 1", { toastId: "min-qty" });
+        return;
+      }
+      if (quantidade > estoqueDisponivel) {
+        toast.error("Quantidade acima do estoque disponível.", { toastId: "over-stock" });
+        return;
+      }
+
+      const imagemParaCarrinho = mainImage || imagensProduto[0] || mesa140;
+
+      addToCart({
+        _id: produto._id,
+        nome: produto.nome,
+        preco: Number(produto.preco),
+        quantidade,
+        imagem: imagemParaCarrinho,
+        descricao: produto.descricao ?? "",
+        categoria: produto.categoria ?? undefined,
+      });
+
+      // ❌ Não mostra toast aqui
+      // ✅ Passa state para o carrinho tostar uma única vez
+      navigate("/carrinho", {
+        state: {
+          added: { id: produto._id, nome: produto.nome, quantidade },
+        },
+      });
+    } finally {
+      setTimeout(() => {
+        addingRef.current = false;
+      }, 400);
+    }
   };
 
   const handleTrocarProduto = (novoId: string) => {
@@ -139,24 +220,35 @@ const DetalhesDoProduto: React.FC = () => {
         <div className="max-w-6xl mx-auto bg-white shadow-xl rounded-2xl p-8 md:p-12 flex flex-col md:flex-row gap-12">
           {/* Miniaturas */}
           <div className="flex md:flex-col gap-3 order-2 md:order-1">
-            {produto.imagem?.map((src, idx) => (
+            {imagensProduto.length > 0 ? (
+              imagensProduto.map((src, idx) => (
+                <img
+                  key={idx}
+                  src={src}
+                  alt={`thumb-${idx + 1}`}
+                  onClick={() => setMainImage(src)}
+                  className={`w-20 h-20 object-cover rounded-lg shadow-lg border hover:opacity-80 transition cursor-pointer ${
+                    mainImage === src ? "ring-2 ring-[#c6a875]" : ""
+                  }`}
+                />
+              ))
+            ) : (
               <img
-                key={idx}
-                src={src}
-                alt={`thumb-${idx + 1}`}
-                onClick={() => setMainImage(src)}
+                src={mesa140}
+                alt="thumb-fallback"
+                onClick={() => setMainImage(mesa140)}
                 className={`w-20 h-20 object-cover rounded-lg shadow-lg border hover:opacity-80 transition cursor-pointer ${
-                  mainImage === src ? "ring-2 ring-[#c6a875]" : ""
+                  mainImage === mesa140 ? "ring-2 ring-[#c6a875]" : ""
                 }`}
               />
-            ))}
+            )}
           </div>
 
           {/* Imagem principal */}
           <div className="order-1 md:order-2 md:mr-[70px]">
             <img
               id="mainImage"
-              src={mainImage}
+              src={mainImage || mesa140}
               alt={produto.nome}
               className="w-full max-w-[450px] h-auto object-cover border rounded-xl shadow-md transition-transform duration-300 hover:scale-105"
             />
@@ -204,8 +296,11 @@ const DetalhesDoProduto: React.FC = () => {
             <div>
               <p className="text-sm text-gray-600">
                 Estoque disponível:{" "}
-                <span className="font-semibold">{produto.quantidade - produto.quantidadeemlocacao} unidades</span>
+                <span className="font-semibold">
+                  {estoqueDisponivel} {estoqueDisponivel === 1 ? "unidade" : "unidades"}
+                </span>
               </p>
+
               <div className="flex items-center gap-3 mt-2">
                 <button
                   aria-label="Diminuir"
@@ -214,12 +309,14 @@ const DetalhesDoProduto: React.FC = () => {
                 >
                   −
                 </button>
+
                 <span className="text-lg font-medium w-6 text-center" aria-live="polite">
                   {quantidade}
                 </span>
+
                 <button
                   aria-label="Aumentar"
-                  onClick={() => setQuantidade((q) => Math.min(produto.quantidade - produto.quantidadeemlocacao, q + 1))}
+                  onClick={() => setQuantidade((q) => Math.min(estoqueDisponivel, q + 1))}
                   className="w-9 h-9 border rounded text-xl font-bold text-[#1a3d39] hover:bg-gray-100 transition"
                 >
                   +
@@ -229,7 +326,7 @@ const DetalhesDoProduto: React.FC = () => {
 
             <button
               onClick={adicionarAoCarrinho}
-              disabled={quantidade < 1 || quantidade > produto.quantidade - produto.quantidadeemlocacao}
+              disabled={quantidade < 1 || quantidade > estoqueDisponivel}
               className="bg-[#c6a875] hover:bg-[#b39264] text-white px-6 py-3 rounded-lg w-full font-semibold shadow transition-all duration-300 disabled:opacity-50"
             >
               Adicionar ao carrinho
@@ -255,7 +352,7 @@ const DetalhesDoProduto: React.FC = () => {
       </main>
 
       {/* Rodapé */}
-      <Footer/>
+      <Footer />
     </>
   );
 };
