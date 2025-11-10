@@ -8,7 +8,7 @@ import { IMaskInput } from "react-imask";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { toast } from "react-toastify";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { Trash2, CreditCard, Wallet, Banknote, ArrowLeft, Loader2, AlertTriangle } from "lucide-react";
 
 dayjs.extend(customParseFormat);
@@ -80,13 +80,6 @@ const CartPage: React.FC = () => {
   useEffect(() => {
     const added = location?.state?.added;
     if (added) {
-      const toastId = `added-${added.id}`;
-      if (!toast.isActive(toastId)) {
-        toast.success(`${added.quantidade}x ${added.nome} adicionado(s) ao carrinho!`, {
-          toastId,
-          autoClose: 2000,
-        });
-      }
       navigate("/carrinho", { replace: true, state: {} });
     }
   }, [location?.state, navigate]);
@@ -221,7 +214,6 @@ const CartPage: React.FC = () => {
                   className="text-sm text-rose-600 hover:text-rose-700 hover:underline"
                   onClick={() => {
                     clearCart();
-                    toast.info("Carrinho limpo.");
                   }}
                 >
                   Limpar carrinho

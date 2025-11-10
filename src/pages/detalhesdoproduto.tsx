@@ -12,10 +12,10 @@ type Product = {
   nome: string;
   preco: number | string;
   descricao?: string;
-  categoria?: string;
+  categoria?: string | undefined;
   quantidade?: number;
   quantidadeemlocacao?: number;
-  imagem: string | string[];
+  imagem: string[];
 };
 
 // ======= IMAGENS FALLBACK =======
@@ -43,7 +43,6 @@ const DetalhesDoProduto: React.FC = () => {
   const { id } = useParams<{ id: string }>();
 
   const { addToCart } = useCart();
-  const [produtos, setProdutos] = React.useState<Product[]>([]);
   const [produto, setProduto] = React.useState<Product | null>(null);
   const [mainImage, setMainImage] = React.useState<string>("");
   const [quantidade, setQuantidade] = React.useState<number>(1);
@@ -95,8 +94,6 @@ const DetalhesDoProduto: React.FC = () => {
           localStorage.setItem("produtos", JSON.stringify(lista));
         }
 
-        setProdutos(lista);
-
         const encontrado = lista.find((p) => p._id === id);
         if (encontrado) {
           setProduto(encontrado);
@@ -127,7 +124,7 @@ const DetalhesDoProduto: React.FC = () => {
   const imagensProduto: string[] = React.useMemo(() => {
     if (!produto) return [];
     if (Array.isArray(produto.imagem)) return produto.imagem;
-    if (typeof produto.imagem === "string" && produto.imagem.trim() !== "") {
+    if (typeof produto.imagem === "string" && produto.imagem[0] !== "") {
       return [produto.imagem];
     }
     return [];
@@ -148,17 +145,17 @@ const DetalhesDoProduto: React.FC = () => {
         return;
       }
 
-      const imagemParaCarrinho = mainImage || imagensProduto[0] || mesa140;
-
       addToCart({
         _id: produto._id,
         nome: produto.nome,
         preco: Number(produto.preco),
         quantidade,
-        imagem: imagemParaCarrinho,
+        imagem: imagensProduto,
         descricao: produto.descricao ?? "",
-        categoria: produto.categoria ?? undefined,
-      });
+        categoria: produto.categoria ?? "",
+        subcategoria: "",
+        quantidadeemlocacao: 0
+      }, quantidade);
 
       // ❌ Não mostra toast aqui
       // ✅ Passa state para o carrinho tostar uma única vez
@@ -174,10 +171,6 @@ const DetalhesDoProduto: React.FC = () => {
     }
   };
 
-  const handleTrocarProduto = (novoId: string) => {
-    if (novoId) navigate(`/detalhesdoproduto/${novoId}`);
-  };
-
   if (!produto) {
     return (
       <div className="flex justify-center items-center h-screen text-lg text-gray-600">
@@ -185,10 +178,6 @@ const DetalhesDoProduto: React.FC = () => {
       </div>
     );
   }
-
-  const produtosMesmaCategoria = produtos.filter(
-    (p) => p.categoria === produto.categoria && p._id !== produto._id
-  );
 
   return (
     <>
@@ -259,28 +248,6 @@ const DetalhesDoProduto: React.FC = () => {
             <h2 className="text-2xl font-bold text-gray-900">{produto.nome}</h2>
 
             {/* Dropdown de mesma categoria */}
-            {produtosMesmaCategoria.length > 0 && (
-              <div>
-                <label
-                  htmlFor="produtosCategoria"
-                  className="block text-sm text-gray-600 mb-1"
-                >
-                  Outros produtos da categoria "{produto.categoria}"
-                </label>
-                <select
-                  id="produtosCategoria"
-                  onChange={(e) => handleTrocarProduto(e.target.value)}
-                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#c6a875]"
-                >
-                  <option value="">Selecione outro produto</option>
-                  {produtosMesmaCategoria.map((p) => (
-                    <option key={p._id} value={p._id}>
-                      {p.nome}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
 
             <p className="text-xl text-[#c6a875] font-bold mt-4">
               R$ {Number(produto.preco).toFixed(2)}

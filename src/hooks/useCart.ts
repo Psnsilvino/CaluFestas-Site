@@ -9,7 +9,7 @@ interface CartItem {
   quantidade: number;
   preco: string | number;
   descricao: string;
-  imagem: string;
+  imagem: string[];
 }
 
 const CART_KEY = "cart";
