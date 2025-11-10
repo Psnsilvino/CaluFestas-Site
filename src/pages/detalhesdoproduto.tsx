@@ -149,7 +149,7 @@ const DetalhesDoProduto: React.FC = () => {
         _id: produto._id,
         nome: produto.nome,
         preco: Number(produto.preco),
-        quantidade,
+        quantidade: produto.quantidade ?? 0,
         imagem: imagensProduto,
         descricao: produto.descricao ?? "",
         categoria: produto.categoria ?? "",

@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
+import {jwtDecode} from "jwt-decode";
 import logo from "../assets/CaLu.png";
-import { jwtDecode } from "jwt-decode";
 
 interface JwtPayload {
   nome?: string;
   email?: string;
-  exp?: number;
+  expire?: string; // formato ISO, ex: "2025-11-12T23:26:13.1314671Z"
 }
 
 const Navbar: React.FC = () => {
@@ -16,15 +16,30 @@ const Navbar: React.FC = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+
     if (token) {
       try {
         const decoded = jwtDecode<JwtPayload>(token);
-        if (decoded.nome) {
-          setUsuarioNome(decoded.nome);
-          console.log(decoded)
-        } else if (decoded.email) {
-          setUsuarioNome(decoded.email.split("@")[0]);
-          console.log(decoded)
+
+        // Verifica se há exp e converte para Date
+        if (decoded.expire) {
+          const expireDate = new Date(decoded.expire);
+          const now = new Date();
+
+          if (expireDate > now) {
+            // Token ainda válido
+            if (decoded.nome) {
+              setUsuarioNome(decoded.nome);
+            } else if (decoded.email) {
+              setUsuarioNome(decoded.email.split("@")[0]);
+            }
+          } else {
+            // Token expirado
+            console.warn("Token expirado, removendo...");
+            localStorage.removeItem("token");
+          }
+        } else {
+          console.warn("Token sem campo de expiração (exp)");
         }
       } catch (err) {
         console.error("Token inválido:", err);
@@ -39,7 +54,7 @@ const Navbar: React.FC = () => {
     setMenuOpen(false);
   };
 
-  // Fecha o menu ao clicar fora
+  // Fecha o menu se clicar fora
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -65,39 +80,27 @@ const Navbar: React.FC = () => {
 
       {/* Menu */}
       <nav className="hidden md:flex space-x-6 text-gray-800 font-medium items-center">
-        <Link
-          to="/catalogo"
-          className="hover:text-[#c6a875] transition-colors duration-200"
-        >
+        <Link to="/catalogo" className="hover:text-[#c6a875] transition-colors duration-200">
+          Galeria
+        </Link>
+        <Link to="/catalogo" className="hover:text-[#c6a875] transition-colors duration-200">
           Catálogo
         </Link>
-        <Link
-          to="/contato"
-          className="hover:text-[#c6a875] transition-colors duration-200"
-        >
+        <Link to="/contato" className="hover:text-[#c6a875] transition-colors duration-200">
           Contato
         </Link>
-        <Link
-          to="/faq"
-          className="hover:text-[#c6a875] transition-colors duration-200"
-        >
+        <Link to="/faq" className="hover:text-[#c6a875] transition-colors duration-200">
           FAQ
         </Link>
-        <Link
-          to="/carrinho"
-          className="hover:text-[#c6a875] transition-colors duration-200"
-        >
-          Carrinho
-        </Link>
 
-        {/* Se o usuário estiver logado */}
+        {/* Se o token for válido, exibe o nome e menu */}
         {usuarioNome ? (
           <div className="relative" ref={menuRef}>
             <button
               onClick={() => setMenuOpen(!menuOpen)}
               className="flex items-center space-x-1 text-[#c6a875] font-semibold focus:outline-none"
             >
-              <span>{usuarioNome}!</span>
+              <span>{usuarioNome}</span>
               <svg
                 className={`w-4 h-4 transform transition-transform ${
                   menuOpen ? "rotate-180" : ""

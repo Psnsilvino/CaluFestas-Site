@@ -42,18 +42,41 @@ export function useCart() {
   }, []);
 
   // ---------- operações públicas ----------
-  const addToCart = (product: Product, quantity = 1) => {
+  const addToCart = (product: Product, quantity: number) => {
     if (quantity <= 0) {
       toast.error(`O produto precisa ter uma quantidade maior que 1`);
       return
     };
+
+    
     setCart((prev) => {
       const existing = prev.find((i) => i._id === product._id);
-      toast.success(`Adicionado ${quantity} itens: ${product.nome} ao carrinho`, { toastId: "AddCart" });
+      if (existing){
+        if (existing.quantidade + quantity > product.quantidade - product.quantidadeemlocacao) {
+          toast.info("Quantidade em estoque excedida", {toastId: "maxDragon"})
+          return existing
+          ? prev.map((i) =>
+            i._id === product._id
+              ? { ...i, quantidade: product.quantidade - product.quantidadeemlocacao }
+              : i
+          )
+        : [...prev, { _id: product._id, nome: product.nome, quantidade: quantity, descricao: product.descricao, preco: product.preco, imagem: product.imagem }];
+        }
+        else {
+          toast.success(`Adicionado ${quantity} itens: ${product.nome} ao carrinho`, { toastId: "AddCart" });
+          return existing
+        ? prev.map((i) =>
+            i._id === product._id
+              ? { ...i, quantidade: i.quantidade + quantity }
+              : i
+          )
+        : [...prev, { _id: product._id, nome: product.nome, quantidade: quantity, descricao: product.descricao, preco: product.preco, imagem: product.imagem }];
+        }
+      }
       return existing
         ? prev.map((i) =>
             i._id === product._id
-              ? { ...i, quantity: i.quantidade + quantity }
+              ? { ...i, quantidade: i.quantidade + quantity }
               : i
           )
         : [...prev, { _id: product._id, nome: product.nome, quantidade: quantity, descricao: product.descricao, preco: product.preco, imagem: product.imagem }];
