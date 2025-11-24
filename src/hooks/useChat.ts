@@ -8,7 +8,7 @@ export interface ChatMessage {
 }
 
 const WEBHOOK_URL =
-  "https://fcampos.app.n8n.cloud/webhook/calu-chat";
+  "https://rafaelelias.app.n8n.cloud/webhook-test/calu-chat";
 const STORAGE_KEY = "calu_chat_history";
 
 export function useChat() {
