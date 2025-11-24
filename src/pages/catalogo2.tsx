@@ -106,7 +106,7 @@ const Catalago: React.FC = () => {
   }
 
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <Navbar />
 
       {/* Estilos da animação local, equivalentes ao <style> do HTML */}
@@ -202,9 +202,11 @@ const Catalago: React.FC = () => {
         </main>
 
         {/* Rodapé */}
-        <Footer />
       </div>
-    </>
+        <div style={CATALAGO_BG}>
+          <Footer />
+        </div>
+    </div>
   );
 };
 

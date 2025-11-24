@@ -180,7 +180,7 @@ const DetalhesDoProduto: React.FC = () => {
   }
 
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       {/* Cabeçalho */}
       <Navbar />
 
@@ -319,8 +319,10 @@ const DetalhesDoProduto: React.FC = () => {
       </main>
 
       {/* Rodapé */}
-      <Footer />
-    </>
+      <div className="bg-[#f9f5f0]">
+        <Footer />
+      </div>
+    </div>
   );
 };
 
