@@ -17,13 +17,14 @@ import Carrinho from './pages/carrinho.tsx';
 import Redirecionamento from './pages/redirecionamento.tsx';
 import FAQ from './pages/FAQ.tsx';
 import ComprasRealizadas from './pages/comprasrealizadas.tsx';
-import ComprasRealizadasAdm from './pages/comprarrealizadasadm.tsx';
+import ComprasRealizadasAdm from './pages/comprarrealizadasadm.tsx'; // Renomeado para letra maiúscula
 import DetalhesDoProduto from './pages/detalhesdoproduto.tsx';
 
 import PrivateRoute from "./privateRoutes";
 import { AuthProvider } from './context/authContext.tsx';
 import { ToastContainer } from 'react-toastify';
 import ChatWidget from './components/ChatWidget.tsx';
+import PainelAdm from './pages/painelAdm.tsx';
 
 const router = createBrowserRouter([
     { path: "/", element: <Home /> },
@@ -39,7 +40,8 @@ const router = createBrowserRouter([
     { path: "/redirecionamento", element: <Redirecionamento /> },
     { path: "/FAQ", element: <FAQ /> },
     { path: "/comprasrealizadas", element: <PrivateRoute><ComprasRealizadas /></PrivateRoute> },
-    { path: "/comprasrealizadasadm", element: <PrivateRoute><ComprasRealizadasAdm /></PrivateRoute> },
+    { path: "/comprasrealizadasadm", element: <PrivateRoute><ComprasRealizadasAdm /></PrivateRoute> }, // Renomeado para letra maiúscula
+    { path: "/painelAdm", element: <PrivateRoute><PainelAdm /></PrivateRoute> },
     { path: "/detalhesdoproduto/:id", element: <DetalhesDoProduto /> },
 ]);
 
