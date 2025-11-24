@@ -121,6 +121,7 @@ const Navbar: React.FC = () => {
                 >
                   Carrinho
                 </Link>
+                <div></div>
                 <Link
                   to={getComprasPath()}
                   className="block px-4 py-2 hover:bg-gray-100"
@@ -163,12 +164,12 @@ const Navbar: React.FC = () => {
           <Link to="/faq" onClick={() => setMobileMenu(false)}>FAQ</Link>
 
           {usuarioNome &&
-            <div>
+            (<div className="flex flex-col">
               <span className="font-semibold text-[#c6a875]">{usuarioNome}</span>
               <Link to={getComprasPath()} onClick={() => setMobileMenu(false)}>
                 Compras realizadas
               </Link>
-            </div>
+            </div>)
           }
 
 

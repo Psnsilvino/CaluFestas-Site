@@ -19,34 +19,31 @@ const Catalago: React.FC = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error] = useState<string | null>(null);
   const [activeFilter, setActiveFilter] = useState<string>("todos");
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchNewProducts = async () => {
       try {
-        const cached = localStorage.getItem("produtos");
-        if (cached) {
-          setProducts(JSON.parse(cached));
-          setLoading(false);
-          return;
-        }
-
-        const response = await axios.get<Product[]>(
-          "http://localhost:8080/api/products/"
-        );
+        const response = await axios.get<Product[]>("http://localhost:8080/api/products/");
         if (Array.isArray(response.data)) {
           setProducts(response.data);
           localStorage.setItem("produtos", JSON.stringify(response.data));
         }
       } catch (err) {
-        setError("Erro ao carregar produtos. Tente novamente mais tarde.");
-      } finally {
-        setLoading(false);
+        console.log("Erro ao atualizar produtos em segundo plano");
       }
     };
 
-    fetchProducts();
+    const cached = localStorage.getItem("produtos");
+
+    if (cached) {
+      setProducts(JSON.parse(cached));
+      setLoading(false);
+      fetchNewProducts(); // 🔄 Atualização em segundo plano
+    } else {
+      fetchNewProducts().finally(() => setLoading(false));
+    }
   }, []);
 
   const categories = useMemo(() => {
@@ -96,7 +93,6 @@ const Catalago: React.FC = () => {
           to { opacity: 1; transform: translateY(0); }
         }
         .animate-fade-in { animation: fade-in 0.6s ease-out forwards; }
-        /* Scroll horizontal nos filtros no mobile */
         .filters-scroll { scrollbar-width: none; }
         .filters-scroll::-webkit-scrollbar { display: none; }
       `}</style>
@@ -115,7 +111,6 @@ const Catalago: React.FC = () => {
             </p>
           </section>
 
-          {/* Filtros com scroll horizontal no mobile */}
           <div className="flex gap-3 justify-start sm:justify-center mb-8 overflow-x-auto filters-scroll px-1">
             <button
               onClick={() => setActiveFilter("todos")}
@@ -143,7 +138,6 @@ const Catalago: React.FC = () => {
             ))}
           </div>
 
-          {/* Grid responsiva melhorada */}
           <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
             {filteredProducts.map((product, i) => (
               <div

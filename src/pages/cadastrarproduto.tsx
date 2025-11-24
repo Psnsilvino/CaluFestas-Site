@@ -101,6 +101,7 @@ export default function CadastrarProduto() {
       });
 
       toast.success("Produto cadastrado com sucesso!");
+      localStorage.removeItem("produtos");
       setProduct({
         _id: "",
         nome: "",
